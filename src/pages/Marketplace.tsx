@@ -90,7 +90,7 @@ const Marketplace = () => {
         .select(`
           *,
           users!listings_seller_id_fkey(username, avatar_url, full_name),
-          home_businesses!listings_business_id_fkey(business_name)
+          home_businesses:business_id(business_name)
         `)
         .eq('status', 'active')
         .eq('is_available', true)
@@ -199,7 +199,6 @@ const Marketplace = () => {
       case "homemade":
         if (selectedBusinessId) {
           filtered = products.filter(p => 
-            p.listing_type === 'homemade' && 
             p.business_id === selectedBusinessId
           );
         } else {
@@ -222,7 +221,6 @@ const Marketplace = () => {
     
     // Filter products for this specific business using business_id
     const businessProducts = products.filter(p => 
-      p.listing_type === 'homemade' && 
       p.business_id === businessId
     );
     setFilteredProducts(businessProducts);
