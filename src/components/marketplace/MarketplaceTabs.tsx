@@ -17,23 +17,22 @@ export function MarketplaceTabs({ children, onTabChange, onProductUpload }: Mark
   const [uploadType, setUploadType] = useState<"thrifted" | "homemade">("homemade");
   const [showBusinessForm, setShowBusinessForm] = useState(false);
 
-  const handleUploadClick = (type: "thrifted" | "homemade") => {
+  const handleUploadClick = (type: "thrifted") => {
     setUploadType(type);
-    if (type === "homemade") {
-      setShowBusinessForm(true);
-    } else {
-      setShowUploadForm(true);
-    }
+    setShowUploadForm(true);
+  };
+
+  const handleCreateBusinessClick = () => {
+    setShowBusinessForm(true);
   };
 
   const handleBusinessSuccess = () => {
     setShowBusinessForm(false);
-    setShowUploadForm(true);
+    onProductUpload();
   };
 
   const handleUploadSuccess = () => {
     setShowUploadForm(false);
-    setShowBusinessForm(false);
     onProductUpload();
   };
 
@@ -137,9 +136,9 @@ export function MarketplaceTabs({ children, onTabChange, onProductUpload }: Mark
                 Community Made
               </Badge>
             </div>
-            <Button onClick={() => handleUploadClick("homemade")} className="bg-gradient-primary">
+            <Button onClick={handleCreateBusinessClick} className="bg-gradient-primary">
               <Plus className="h-4 w-4 mr-2" />
-              Create Business & Upload
+              Create Business
             </Button>
           </div>
           <p className="text-muted-foreground mb-4">
@@ -161,14 +160,6 @@ export function MarketplaceTabs({ children, onTabChange, onProductUpload }: Mark
         {showBusinessForm && (
           <BusinessCreationForm 
             onSuccess={handleBusinessSuccess}
-            onCancel={handleCancel}
-          />
-        )}
-        
-        {showUploadForm && uploadType === "homemade" && (
-          <ProductUploadForm 
-            listingType="homemade" 
-            onSuccess={handleUploadSuccess}
             onCancel={handleCancel}
           />
         )}

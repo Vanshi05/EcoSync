@@ -6,12 +6,13 @@ import { BusinessCard } from "@/components/marketplace/BusinessCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut, ChevronLeft } from "lucide-react";
+import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut, ChevronLeft, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/marketplace-hero.jpg";
+import { ProductUploadForm } from "@/components/marketplace/ProductUploadForm";
 
 interface Product {
   id: number;
@@ -60,6 +61,7 @@ const Marketplace = () => {
   const [currentTab, setCurrentTab] = useState("all");
   const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
   const [selectedBusinessUserId, setSelectedBusinessUserId] = useState<string | null>(null);
+  const [showBusinessUpload, setShowBusinessUpload] = useState(false);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
 
@@ -229,6 +231,12 @@ const Marketplace = () => {
   const handleBackToBusinesses = () => {
     setSelectedBusinessId(null);
     setSelectedBusinessUserId(null);
+    setShowBusinessUpload(false);
+  };
+
+  const handleBusinessUploadSuccess = () => {
+    setShowBusinessUpload(false);
+    fetchProducts();
   };
 
   const handleSearch = (query: string) => {
@@ -393,20 +401,40 @@ const Marketplace = () => {
             ) : currentTab === 'homemade' && selectedBusinessId ? (
               // Show products for selected business
               <div className="space-y-6">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleBackToBusinesses}
+                      className="flex items-center gap-2"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Back to Businesses
+                    </Button>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Products from {businesses.find(b => b.id === selectedBusinessId)?.business_name}
+                    </h3>
+                  </div>
                   <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleBackToBusinesses}
-                    className="flex items-center gap-2"
+                    onClick={() => setShowBusinessUpload(true)}
+                    className="bg-gradient-primary flex items-center gap-2"
                   >
-                    <ChevronLeft className="h-4 w-4" />
-                    Back to Businesses
+                    <Plus className="h-4 w-4" />
+                    Upload Product
                   </Button>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Products from {businesses.find(b => b.id === selectedBusinessId)?.business_name}
-                  </h3>
                 </div>
+
+                {showBusinessUpload && (
+                  <div className="mb-6">
+                    <ProductUploadForm 
+                      listingType="homemade"
+                      businessId={selectedBusinessId!}
+                      onSuccess={handleBusinessUploadSuccess}
+                      onCancel={() => setShowBusinessUpload(false)}
+                    />
+                  </div>
+                )}
                 
                 {filteredProducts.length === 0 ? (
                   <div className="text-center py-20 space-y-4">

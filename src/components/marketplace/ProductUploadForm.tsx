@@ -14,9 +14,10 @@ interface ProductUploadFormProps {
   listingType: "thrifted" | "homemade";
   onSuccess: () => void;
   onCancel: () => void;
+  businessId?: number; // Optional business ID for auto-assignment
 }
 
-export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductUploadFormProps) {
+export function ProductUploadForm({ listingType, onSuccess, onCancel, businessId }: ProductUploadFormProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -34,12 +35,15 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
   const { toast } = useToast();
   const { user } = useAuth();
 
-  // Fetch user's businesses if listing type is homemade
+  // Fetch user's businesses if listing type is homemade and no businessId provided
   useEffect(() => {
-    if (listingType === "homemade" && user) {
+    if (listingType === "homemade" && user && !businessId) {
       fetchUserBusinesses();
+    } else if (businessId) {
+      // If businessId is provided, set it directly
+      setFormData(prev => ({ ...prev, business_id: businessId.toString() }));
     }
-  }, [listingType, user]);
+  }, [listingType, user, businessId]);
 
   const fetchUserBusinesses = async () => {
     setLoadingBusinesses(true);
@@ -124,6 +128,7 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
           description: "Please select a business for homemade products",
           variant: "destructive"
         });
+        setUploading(false);
         return;
       }
 
@@ -275,7 +280,7 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
             />
           </div>
 
-          {listingType === "homemade" && (
+          {listingType === "homemade" && !businessId && (
             <div className="space-y-2">
               <Label htmlFor="business_id">Select Business *</Label>
               {loadingBusinesses ? (
