@@ -61,21 +61,53 @@ const Marketplace = () => {
   const fetchProducts = async () => {
     try {
       const { data, error } = await supabase
-        .from('marketplace_products')
+        .from('listings')
         .select(`
           *,
-          marketplace_vendors(business_name, is_verified)
+          users!listings_seller_id_fkey(username, avatar_url, full_name)
         `)
-        .eq('is_active', true)
+        .eq('status', 'active')
+        .eq('is_available', true)
+        .order('created_at', { ascending: false })
         .limit(50);
 
       if (error) throw error;
 
-      const formattedProducts = data?.map(product => ({
-        ...product,
-        vendor: product.marketplace_vendors,
-        seller: { username: "Community Member", avatar_url: null }
-      })) || [];
+      // Get brand profiles separately for users who have them
+      const userIds = data?.map(listing => listing.seller_id) || [];
+      const { data: brandProfiles } = await supabase
+        .from('brand_profiles')
+        .select('user_id, brand_name, verification_status')
+        .in('user_id', userIds);
+
+      const brandProfilesMap = new Map(
+        brandProfiles?.map(bp => [bp.user_id, bp]) || []
+      );
+
+      const formattedProducts = data?.map(listing => {
+        const brandProfile = brandProfilesMap.get(listing.seller_id);
+        
+        return {
+          id: listing.id,
+          name: listing.title,
+          description: listing.description,
+          price_inr: listing.price,
+          images: listing.images,
+          sustainability_score: listing.sustainability_score,
+          carbon_footprint: listing.carbon_saved_kg,
+          condition: listing.condition,
+          is_eco_friendly: listing.listing_type === 'homemade',
+          is_second_hand: listing.listing_type === 'thrifted',
+          vendor: brandProfile ? {
+            business_name: brandProfile.brand_name,
+            is_verified: brandProfile.verification_status === 'verified'
+          } : undefined,
+          seller: {
+            username: listing.users?.username || 'Unknown User',
+            avatar_url: listing.users?.avatar_url
+          }
+        };
+      }) || [];
 
       setProducts(formattedProducts);
     } catch (error) {
@@ -237,7 +269,7 @@ const Marketplace = () => {
             currentView={currentView}
           />
 
-          <MarketplaceTabs onTabChange={setCurrentTab}>
+          <MarketplaceTabs onTabChange={setCurrentTab} onProductUpload={fetchProducts}>
             {loading ? (
               <div className="text-center py-20">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-primary mx-auto mb-4"></div>
