@@ -14,680 +14,213 @@ export type Database = {
   }
   public: {
     Tables: {
-      ai_recommendations: {
+      brand_profiles: {
         Row: {
-          category: string
+          brand_name: string
+          business_registration: string | null
+          carbon_neutral: boolean | null
+          certifications: Json | null
           created_at: string | null
-          difficulty_level: string | null
-          expires_at: string | null
+          description: string | null
           id: number
-          implementation_status: string | null
-          potential_savings_inr: number | null
-          potential_savings_kwh: number | null
-          recommendation_text: string
-          source_data: Json | null
+          sustainability_report_url: string | null
           user_id: string
+          verification_documents: Json | null
+          verification_status: string | null
+          verified_at: string | null
+          website_url: string | null
         }
         Insert: {
-          category: string
+          brand_name: string
+          business_registration?: string | null
+          carbon_neutral?: boolean | null
+          certifications?: Json | null
           created_at?: string | null
-          difficulty_level?: string | null
-          expires_at?: string | null
+          description?: string | null
           id?: number
-          implementation_status?: string | null
-          potential_savings_inr?: number | null
-          potential_savings_kwh?: number | null
-          recommendation_text: string
-          source_data?: Json | null
+          sustainability_report_url?: string | null
           user_id: string
+          verification_documents?: Json | null
+          verification_status?: string | null
+          verified_at?: string | null
+          website_url?: string | null
         }
         Update: {
-          category?: string
+          brand_name?: string
+          business_registration?: string | null
+          carbon_neutral?: boolean | null
+          certifications?: Json | null
           created_at?: string | null
-          difficulty_level?: string | null
-          expires_at?: string | null
+          description?: string | null
           id?: number
-          implementation_status?: string | null
-          potential_savings_inr?: number | null
-          potential_savings_kwh?: number | null
-          recommendation_text?: string
-          source_data?: Json | null
+          sustainability_report_url?: string | null
           user_id?: string
+          verification_documents?: Json | null
+          verification_status?: string | null
+          verified_at?: string | null
+          website_url?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "ai_recommendations_user_id_fkey"
+            foreignKeyName: "brand_profiles_user_id_fkey"
             columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "ai_recommendations_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            isOneToOne: true
+            referencedRelation: "user_profiles_summary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "ai_recommendations_user_id_fkey"
+            foreignKeyName: "brand_profiles_user_id_fkey"
             columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
+            isOneToOne: true
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      badges: {
+      categories: {
         Row: {
-          category: string | null
           created_at: string | null
-          description: string
+          description: string | null
           icon_url: string | null
           id: number
           name: string
-          points_value: number | null
-          rarity: string | null
-          requirements: Json | null
+          parent_id: number | null
         }
         Insert: {
-          category?: string | null
           created_at?: string | null
-          description: string
+          description?: string | null
           icon_url?: string | null
           id?: number
           name: string
-          points_value?: number | null
-          rarity?: string | null
-          requirements?: Json | null
+          parent_id?: number | null
         }
         Update: {
-          category?: string | null
           created_at?: string | null
-          description?: string
+          description?: string | null
           icon_url?: string | null
           id?: number
           name?: string
-          points_value?: number | null
-          rarity?: string | null
-          requirements?: Json | null
+          parent_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      carbon_budgets: {
+      comments: {
         Row: {
-          budget_limit: number
-          category: string
+          comment_text: string
           created_at: string | null
-          current_usage: number | null
           id: number
-          month_year: string
+          listing_id: number
+          parent_comment_id: number | null
           user_id: string
         }
         Insert: {
-          budget_limit: number
-          category: string
+          comment_text: string
           created_at?: string | null
-          current_usage?: number | null
           id?: number
-          month_year: string
+          listing_id: number
+          parent_comment_id?: number | null
           user_id: string
         }
         Update: {
-          budget_limit?: number
-          category?: string
+          comment_text?: string
           created_at?: string | null
-          current_usage?: number | null
           id?: number
-          month_year?: string
+          listing_id?: number
+          parent_comment_id?: number | null
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "carbon_budgets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "comments_listing_id_fkey"
+            columns: ["listing_id"]
             isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "carbon_budgets_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "active_marketplace"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "carbon_budgets_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "comments_listing_id_fkey"
+            columns: ["listing_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      carbon_entries: {
-        Row: {
-          activity_description: string | null
-          carbon_footprint: number
-          category: string
-          cost_inr: number | null
-          created_at: string | null
-          date: string
-          id: number
-          quantity: number | null
-          source: string | null
-          subcategory: string | null
-          unit: string
-          user_id: string
-        }
-        Insert: {
-          activity_description?: string | null
-          carbon_footprint: number
-          category: string
-          cost_inr?: number | null
-          created_at?: string | null
-          date: string
-          id?: number
-          quantity?: number | null
-          source?: string | null
-          subcategory?: string | null
-          unit: string
-          user_id: string
-        }
-        Update: {
-          activity_description?: string | null
-          carbon_footprint?: number
-          category?: string
-          cost_inr?: number | null
-          created_at?: string | null
-          date?: string
-          id?: number
-          quantity?: number | null
-          source?: string | null
-          subcategory?: string | null
-          unit?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "carbon_entries_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "carbon_entries_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "listings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "carbon_entries_user_id_fkey"
+            foreignKeyName: "comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      challenges: {
-        Row: {
-          category: string
-          challenge_type: string
-          created_at: string | null
-          created_by: string | null
-          description: string
-          difficulty: string | null
-          eco_coins_reward: number | null
-          end_date: string
-          id: number
-          is_active: boolean | null
-          max_participants: number | null
-          points_reward: number
-          start_date: string
-          target_unit: string | null
-          target_value: number | null
-          title: string
-        }
-        Insert: {
-          category: string
-          challenge_type: string
-          created_at?: string | null
-          created_by?: string | null
-          description: string
-          difficulty?: string | null
-          eco_coins_reward?: number | null
-          end_date: string
-          id?: number
-          is_active?: boolean | null
-          max_participants?: number | null
-          points_reward: number
-          start_date: string
-          target_unit?: string | null
-          target_value?: number | null
-          title: string
-        }
-        Update: {
-          category?: string
-          challenge_type?: string
-          created_at?: string | null
-          created_by?: string | null
-          description?: string
-          difficulty?: string | null
-          eco_coins_reward?: number | null
-          end_date?: string
-          id?: number
-          is_active?: boolean | null
-          max_participants?: number | null
-          points_reward?: number
-          start_date?: string
-          target_unit?: string | null
-          target_value?: number | null
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "challenges_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "challenges_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "challenges_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      donation_routes: {
+      follows: {
         Row: {
           created_at: string | null
-          donation_ids: Json
-          estimated_time_mins: number | null
+          follower_id: string
+          following_id: string
           id: number
-          ngo_id: number
-          optimized_route: Json | null
-          route_date: string
-          status: string | null
-          total_distance_km: number | null
         }
         Insert: {
           created_at?: string | null
-          donation_ids: Json
-          estimated_time_mins?: number | null
+          follower_id: string
+          following_id: string
           id?: number
-          ngo_id: number
-          optimized_route?: Json | null
-          route_date: string
-          status?: string | null
-          total_distance_km?: number | null
         }
         Update: {
           created_at?: string | null
-          donation_ids?: Json
-          estimated_time_mins?: number | null
+          follower_id?: string
+          following_id?: string
           id?: number
-          ngo_id?: number
-          optimized_route?: Json | null
-          route_date?: string
-          status?: string | null
-          total_distance_km?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "donation_routes_ngo_id_fkey"
-            columns: ["ngo_id"]
+            foreignKeyName: "follows_follower_id_fkey"
+            columns: ["follower_id"]
             isOneToOne: false
-            referencedRelation: "ngos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      eco_transactions: {
-        Row: {
-          amount: number
-          balance_after: number
-          created_at: string | null
-          id: number
-          reason: string
-          reference_id: number | null
-          reference_table: string | null
-          transaction_type: string
-          user_id: string
-        }
-        Insert: {
-          amount: number
-          balance_after: number
-          created_at?: string | null
-          id?: number
-          reason: string
-          reference_id?: number | null
-          reference_table?: string | null
-          transaction_type: string
-          user_id: string
-        }
-        Update: {
-          amount?: number
-          balance_after?: number
-          created_at?: string | null
-          id?: number
-          reason?: string
-          reference_id?: number | null
-          reference_table?: string | null
-          transaction_type?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "eco_transactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "eco_transactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "user_profiles_summary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "eco_transactions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "follows_follower_id_fkey"
+            columns: ["follower_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      energy_goals: {
-        Row: {
-          actual_kwh: number | null
-          created_at: string | null
-          goal_met: boolean | null
-          id: number
-          month_year: string
-          savings_percentage: number | null
-          target_kwh: number
-          user_id: string
-        }
-        Insert: {
-          actual_kwh?: number | null
-          created_at?: string | null
-          goal_met?: boolean | null
-          id?: number
-          month_year: string
-          savings_percentage?: number | null
-          target_kwh: number
-          user_id: string
-        }
-        Update: {
-          actual_kwh?: number | null
-          created_at?: string | null
-          goal_met?: boolean | null
-          id?: number
-          month_year?: string
-          savings_percentage?: number | null
-          target_kwh?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "energy_goals_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "energy_goals_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "energy_goals_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "follows_following_id_fkey"
+            columns: ["following_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      energy_readings: {
-        Row: {
-          cost_inr: number | null
-          created_at: string | null
-          id: number
-          kwh_used: number
-          meter_reading: number | null
-          peak_usage_hours: Json | null
-          reading_time: string
-          source: string | null
-          user_id: string
-        }
-        Insert: {
-          cost_inr?: number | null
-          created_at?: string | null
-          id?: number
-          kwh_used: number
-          meter_reading?: number | null
-          peak_usage_hours?: Json | null
-          reading_time: string
-          source?: string | null
-          user_id: string
-        }
-        Update: {
-          cost_inr?: number | null
-          created_at?: string | null
-          id?: number
-          kwh_used?: number
-          meter_reading?: number | null
-          peak_usage_hours?: Json | null
-          reading_time?: string
-          source?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "energy_readings_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "energy_readings_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "user_profiles_summary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "energy_readings_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "follows_following_id_fkey"
+            columns: ["following_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      energy_tips: {
-        Row: {
-          category: string | null
-          created_at: string | null
-          difficulty: string | null
-          estimated_savings_inr: number | null
-          estimated_savings_kwh: number | null
-          id: number
-          image_url: string | null
-          is_verified: boolean | null
-          likes_count: number | null
-          shares_count: number | null
-          tip_text: string
-          user_id: string
-        }
-        Insert: {
-          category?: string | null
-          created_at?: string | null
-          difficulty?: string | null
-          estimated_savings_inr?: number | null
-          estimated_savings_kwh?: number | null
-          id?: number
-          image_url?: string | null
-          is_verified?: boolean | null
-          likes_count?: number | null
-          shares_count?: number | null
-          tip_text: string
-          user_id: string
-        }
-        Update: {
-          category?: string | null
-          created_at?: string | null
-          difficulty?: string | null
-          estimated_savings_inr?: number | null
-          estimated_savings_kwh?: number | null
-          id?: number
-          image_url?: string | null
-          is_verified?: boolean | null
-          likes_count?: number | null
-          shares_count?: number | null
-          tip_text?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "energy_tips_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "energy_tips_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "energy_tips_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      food_donations: {
-        Row: {
-          assigned_at: string | null
-          carbon_saved_kg: number | null
-          created_at: string | null
-          delivered_at: string | null
-          description: string | null
-          donor_id: string
-          eco_coins_earned: number | null
-          estimated_meals: number | null
-          expiry_time: string
-          food_type: string
-          id: number
-          ngo_id: number | null
-          picked_up_at: string | null
-          pickup_address: string
-          pickup_latitude: number | null
-          pickup_longitude: number | null
-          preferred_pickup_time: string | null
-          quantity: number
-          status: string | null
-          unit: string
-        }
-        Insert: {
-          assigned_at?: string | null
-          carbon_saved_kg?: number | null
-          created_at?: string | null
-          delivered_at?: string | null
-          description?: string | null
-          donor_id: string
-          eco_coins_earned?: number | null
-          estimated_meals?: number | null
-          expiry_time: string
-          food_type: string
-          id?: number
-          ngo_id?: number | null
-          picked_up_at?: string | null
-          pickup_address: string
-          pickup_latitude?: number | null
-          pickup_longitude?: number | null
-          preferred_pickup_time?: string | null
-          quantity: number
-          status?: string | null
-          unit: string
-        }
-        Update: {
-          assigned_at?: string | null
-          carbon_saved_kg?: number | null
-          created_at?: string | null
-          delivered_at?: string | null
-          description?: string | null
-          donor_id?: string
-          eco_coins_earned?: number | null
-          estimated_meals?: number | null
-          expiry_time?: string
-          food_type?: string
-          id?: number
-          ngo_id?: number | null
-          picked_up_at?: string | null
-          pickup_address?: string
-          pickup_latitude?: number | null
-          pickup_longitude?: number | null
-          preferred_pickup_time?: string | null
-          quantity?: number
-          status?: string | null
-          unit?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "food_donations_donor_id_fkey"
-            columns: ["donor_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "food_donations_donor_id_fkey"
-            columns: ["donor_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "food_donations_donor_id_fkey"
-            columns: ["donor_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "food_donations_ngo_id_fkey"
-            columns: ["ngo_id"]
-            isOneToOne: false
-            referencedRelation: "ngos"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -700,7 +233,7 @@ export type Database = {
           Disposal_Score: number | null
           Manufacturing_Score: number | null
           Price: number | null
-          Product_ID: string
+          Product_ID: string | null
           Product_Name: string | null
           Raw_Materials: string | null
           Raw_Materials_Score: number | null
@@ -717,7 +250,7 @@ export type Database = {
           Disposal_Score?: number | null
           Manufacturing_Score?: number | null
           Price?: number | null
-          Product_ID: string
+          Product_ID?: string | null
           Product_Name?: string | null
           Raw_Materials?: string | null
           Raw_Materials_Score?: number | null
@@ -734,7 +267,7 @@ export type Database = {
           Disposal_Score?: number | null
           Manufacturing_Score?: number | null
           Price?: number | null
-          Product_ID?: string
+          Product_ID?: string | null
           Product_Name?: string | null
           Raw_Materials?: string | null
           Raw_Materials_Score?: number | null
@@ -746,455 +279,196 @@ export type Database = {
         }
         Relationships: []
       }
-      leaderboards: {
-        Row: {
-          calculated_at: string | null
-          id: number
-          metric_type: string
-          neighborhood_id: string | null
-          period: string
-          period_end: string
-          period_start: string
-          rank_position: number | null
-          user_id: string
-          value: number
-        }
-        Insert: {
-          calculated_at?: string | null
-          id?: number
-          metric_type: string
-          neighborhood_id?: string | null
-          period: string
-          period_end: string
-          period_start: string
-          rank_position?: number | null
-          user_id: string
-          value: number
-        }
-        Update: {
-          calculated_at?: string | null
-          id?: number
-          metric_type?: string
-          neighborhood_id?: string | null
-          period?: string
-          period_end?: string
-          period_start?: string
-          rank_position?: number | null
-          user_id?: string
-          value?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "leaderboards_neighborhood_id_fkey"
-            columns: ["neighborhood_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhoods"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "leaderboards_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "leaderboards_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "leaderboards_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      marketplace_categories: {
+      listing_interactions: {
         Row: {
           created_at: string | null
-          icon_url: string | null
           id: number
-          name: string
-          parent_id: number | null
-          sustainability_focus: boolean | null
+          interaction_type: string
+          listing_id: number
+          user_id: string
         }
         Insert: {
           created_at?: string | null
-          icon_url?: string | null
           id?: number
-          name: string
-          parent_id?: number | null
-          sustainability_focus?: boolean | null
+          interaction_type: string
+          listing_id: number
+          user_id: string
         }
         Update: {
           created_at?: string | null
-          icon_url?: string | null
           id?: number
-          name?: string
-          parent_id?: number | null
-          sustainability_focus?: boolean | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "marketplace_categories_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "marketplace_categories"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      marketplace_orders: {
-        Row: {
-          delivered_at: string | null
-          delivery_address: string | null
-          eco_coins_earned: number | null
-          eco_coins_used: number | null
-          id: number
-          order_date: string | null
-          status: string | null
-          total_amount: number
-          total_carbon_footprint: number | null
-          user_id: string
-          vendor_id: number
-        }
-        Insert: {
-          delivered_at?: string | null
-          delivery_address?: string | null
-          eco_coins_earned?: number | null
-          eco_coins_used?: number | null
-          id?: number
-          order_date?: string | null
-          status?: string | null
-          total_amount: number
-          total_carbon_footprint?: number | null
-          user_id: string
-          vendor_id: number
-        }
-        Update: {
-          delivered_at?: string | null
-          delivery_address?: string | null
-          eco_coins_earned?: number | null
-          eco_coins_used?: number | null
-          id?: number
-          order_date?: string | null
-          status?: string | null
-          total_amount?: number
-          total_carbon_footprint?: number | null
+          interaction_type?: string
+          listing_id?: number
           user_id?: string
-          vendor_id?: number
         }
         Relationships: [
           {
-            foreignKeyName: "marketplace_orders_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "listing_interactions_listing_id_fkey"
+            columns: ["listing_id"]
             isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "marketplace_orders_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "active_marketplace"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "marketplace_orders_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "listing_interactions_listing_id_fkey"
+            columns: ["listing_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
+            referencedRelation: "listings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "marketplace_orders_vendor_id_fkey"
-            columns: ["vendor_id"]
+            foreignKeyName: "listing_interactions_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "marketplace_vendors"
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_interactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      marketplace_products: {
+      listings: {
         Row: {
-          carbon_footprint: number | null
+          carbon_saved_kg: number | null
           category_id: number | null
           condition: string | null
           created_at: string | null
-          description: string | null
+          delivery_available: boolean | null
+          delivery_radius_km: number | null
+          description: string
+          eco_certifications: Json | null
           id: number
           images: Json | null
-          is_active: boolean | null
-          is_eco_friendly: boolean | null
-          is_second_hand: boolean | null
-          name: string
-          price_inr: number
-          recyclability_score: number | null
+          is_available: boolean | null
+          likes_count: number | null
+          listing_type: string
+          pickup_address: string | null
+          pickup_latitude: number | null
+          pickup_longitude: number | null
+          price: number
+          seller_id: string
+          status: string | null
           stock_quantity: number | null
+          sustainability_attributes: Json | null
           sustainability_score: number | null
+          title: string
           updated_at: string | null
-          vendor_id: number
-          water_footprint: number | null
+          views_count: number | null
         }
         Insert: {
-          carbon_footprint?: number | null
+          carbon_saved_kg?: number | null
           category_id?: number | null
           condition?: string | null
           created_at?: string | null
-          description?: string | null
+          delivery_available?: boolean | null
+          delivery_radius_km?: number | null
+          description: string
+          eco_certifications?: Json | null
           id?: number
           images?: Json | null
-          is_active?: boolean | null
-          is_eco_friendly?: boolean | null
-          is_second_hand?: boolean | null
-          name: string
-          price_inr: number
-          recyclability_score?: number | null
+          is_available?: boolean | null
+          likes_count?: number | null
+          listing_type: string
+          pickup_address?: string | null
+          pickup_latitude?: number | null
+          pickup_longitude?: number | null
+          price: number
+          seller_id: string
+          status?: string | null
           stock_quantity?: number | null
+          sustainability_attributes?: Json | null
           sustainability_score?: number | null
+          title: string
           updated_at?: string | null
-          vendor_id: number
-          water_footprint?: number | null
+          views_count?: number | null
         }
         Update: {
-          carbon_footprint?: number | null
+          carbon_saved_kg?: number | null
           category_id?: number | null
           condition?: string | null
           created_at?: string | null
-          description?: string | null
+          delivery_available?: boolean | null
+          delivery_radius_km?: number | null
+          description?: string
+          eco_certifications?: Json | null
           id?: number
           images?: Json | null
-          is_active?: boolean | null
-          is_eco_friendly?: boolean | null
-          is_second_hand?: boolean | null
-          name?: string
-          price_inr?: number
-          recyclability_score?: number | null
+          is_available?: boolean | null
+          likes_count?: number | null
+          listing_type?: string
+          pickup_address?: string | null
+          pickup_latitude?: number | null
+          pickup_longitude?: number | null
+          price?: number
+          seller_id?: string
+          status?: string | null
           stock_quantity?: number | null
+          sustainability_attributes?: Json | null
           sustainability_score?: number | null
+          title?: string
           updated_at?: string | null
-          vendor_id?: number
-          water_footprint?: number | null
+          views_count?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "marketplace_products_category_id_fkey"
+            foreignKeyName: "listings_category_id_fkey"
             columns: ["category_id"]
             isOneToOne: false
-            referencedRelation: "marketplace_categories"
+            referencedRelation: "categories"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "marketplace_products_vendor_id_fkey"
-            columns: ["vendor_id"]
+            foreignKeyName: "listings_seller_id_fkey"
+            columns: ["seller_id"]
             isOneToOne: false
-            referencedRelation: "marketplace_vendors"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      marketplace_vendors: {
-        Row: {
-          address: string | null
-          business_name: string
-          carbon_footprint: number | null
-          certifications: Json | null
-          created_at: string | null
-          email: string
-          energy_usage_kwh: number | null
-          id: number
-          is_active: boolean | null
-          is_verified: boolean | null
-          owner_user_id: string | null
-          phone: string | null
-          sustainability_score: number | null
-        }
-        Insert: {
-          address?: string | null
-          business_name: string
-          carbon_footprint?: number | null
-          certifications?: Json | null
-          created_at?: string | null
-          email: string
-          energy_usage_kwh?: number | null
-          id?: number
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          owner_user_id?: string | null
-          phone?: string | null
-          sustainability_score?: number | null
-        }
-        Update: {
-          address?: string | null
-          business_name?: string
-          carbon_footprint?: number | null
-          certifications?: Json | null
-          created_at?: string | null
-          email?: string
-          energy_usage_kwh?: number | null
-          id?: number
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          owner_user_id?: string | null
-          phone?: string | null
-          sustainability_score?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "marketplace_vendors_owner_user_id_fkey"
-            columns: ["owner_user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "marketplace_vendors_owner_user_id_fkey"
-            columns: ["owner_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "user_profiles_summary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "marketplace_vendors_owner_user_id_fkey"
-            columns: ["owner_user_id"]
+            foreignKeyName: "listings_seller_id_fkey"
+            columns: ["seller_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
-      }
-      neighborhoods: {
-        Row: {
-          average_energy_usage: number | null
-          boundary_coords: Json | null
-          city: string
-          created_at: string | null
-          id: string
-          leaderboard_visible: boolean | null
-          name: string
-          pincode: string | null
-          state: string
-          total_households: number | null
-        }
-        Insert: {
-          average_energy_usage?: number | null
-          boundary_coords?: Json | null
-          city: string
-          created_at?: string | null
-          id?: string
-          leaderboard_visible?: boolean | null
-          name: string
-          pincode?: string | null
-          state: string
-          total_households?: number | null
-        }
-        Update: {
-          average_energy_usage?: number | null
-          boundary_coords?: Json | null
-          city?: string
-          created_at?: string | null
-          id?: string
-          leaderboard_visible?: boolean | null
-          name?: string
-          pincode?: string | null
-          state?: string
-          total_households?: number | null
-        }
-        Relationships: []
-      }
-      ngos: {
-        Row: {
-          address: string
-          contact_person: string | null
-          created_at: string | null
-          current_capacity: number | null
-          email: string
-          id: number
-          is_active: boolean | null
-          is_verified: boolean | null
-          latitude: number | null
-          longitude: number | null
-          name: string
-          phone: string
-          rating: number | null
-          service_areas: Json | null
-          specialization: Json | null
-        }
-        Insert: {
-          address: string
-          contact_person?: string | null
-          created_at?: string | null
-          current_capacity?: number | null
-          email: string
-          id?: number
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          latitude?: number | null
-          longitude?: number | null
-          name: string
-          phone: string
-          rating?: number | null
-          service_areas?: Json | null
-          specialization?: Json | null
-        }
-        Update: {
-          address?: string
-          contact_person?: string | null
-          created_at?: string | null
-          current_capacity?: number | null
-          email?: string
-          id?: number
-          is_active?: boolean | null
-          is_verified?: boolean | null
-          latitude?: number | null
-          longitude?: number | null
-          name?: string
-          phone?: string
-          rating?: number | null
-          service_areas?: Json | null
-          specialization?: Json | null
-        }
-        Relationships: []
       }
       notifications: {
         Row: {
-          action_url: string | null
           created_at: string | null
           id: number
           is_read: boolean | null
           message: string
-          metadata: Json | null
           notification_type: string
-          priority: string | null
+          reference_id: number | null
+          reference_type: string | null
           title: string
           user_id: string
         }
         Insert: {
-          action_url?: string | null
           created_at?: string | null
           id?: number
           is_read?: boolean | null
           message: string
-          metadata?: Json | null
           notification_type: string
-          priority?: string | null
+          reference_id?: number | null
+          reference_type?: string | null
           title: string
           user_id: string
         }
         Update: {
-          action_url?: string | null
           created_at?: string | null
           id?: number
           is_read?: boolean | null
           message?: string
-          metadata?: Json | null
           notification_type?: string
-          priority?: string | null
+          reference_id?: number | null
+          reference_type?: string | null
           title?: string
           user_id?: string
         }
@@ -1203,925 +477,466 @@ export type Database = {
             foreignKeyName: "notifications_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "user_profiles_summary"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "notifications_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      order_items: {
+      reviews: {
         Row: {
+          created_at: string | null
           id: number
-          order_id: number
-          product_id: number
+          listing_id: number
+          rating: number
+          review_text: string | null
+          reviewed_user_id: string
+          reviewer_id: string
+          sustainability_rating: number | null
+          transaction_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          listing_id: number
+          rating: number
+          review_text?: string | null
+          reviewed_user_id: string
+          reviewer_id: string
+          sustainability_rating?: number | null
+          transaction_id: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          listing_id?: number
+          rating?: number
+          review_text?: string | null
+          reviewed_user_id?: string
+          reviewer_id?: string
+          sustainability_rating?: number | null
+          transaction_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "active_marketplace"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_reviewed_user_id_fkey"
+            columns: ["reviewed_user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_reviewed_user_id_fkey"
+            columns: ["reviewed_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_searches: {
+        Row: {
+          created_at: string | null
+          id: number
+          notification_enabled: boolean | null
+          search_filters: Json
+          search_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          notification_enabled?: boolean | null
+          search_filters: Json
+          search_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          notification_enabled?: boolean | null
+          search_filters?: Json
+          search_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_searches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_searches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          buyer_id: string
+          carbon_impact_saved: number | null
+          completed_at: string | null
+          created_at: string | null
+          delivery_method: string | null
+          id: number
+          listing_id: number
+          payment_method: string | null
           quantity: number
-          subtotal: number
+          seller_id: string
+          status: string | null
+          total_amount: number
           unit_price: number
         }
         Insert: {
+          buyer_id: string
+          carbon_impact_saved?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          delivery_method?: string | null
           id?: number
-          order_id: number
-          product_id: number
-          quantity: number
-          subtotal: number
+          listing_id: number
+          payment_method?: string | null
+          quantity?: number
+          seller_id: string
+          status?: string | null
+          total_amount: number
           unit_price: number
         }
         Update: {
+          buyer_id?: string
+          carbon_impact_saved?: number | null
+          completed_at?: string | null
+          created_at?: string | null
+          delivery_method?: string | null
           id?: number
-          order_id?: number
-          product_id?: number
+          listing_id?: number
+          payment_method?: string | null
           quantity?: number
-          subtotal?: number
+          seller_id?: string
+          status?: string | null
+          total_amount?: number
           unit_price?: number
         }
         Relationships: [
           {
-            foreignKeyName: "order_items_order_id_fkey"
-            columns: ["order_id"]
+            foreignKeyName: "transactions_buyer_id_fkey"
+            columns: ["buyer_id"]
             isOneToOne: false
-            referencedRelation: "marketplace_orders"
+            referencedRelation: "user_profiles_summary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "order_items_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: "transactions_buyer_id_fkey"
+            columns: ["buyer_id"]
             isOneToOne: false
-            referencedRelation: "marketplace_products"
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "active_marketplace"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      product_database: {
-        Row: {
-          alternatives: Json | null
-          barcode: string | null
-          brand: string | null
-          carbon_footprint_kg: number | null
-          category: string
-          created_at: string | null
-          disposal_score: number | null
-          eco_tips: Json | null
-          id: number
-          manufacturing_score: number | null
-          name: string
-          overall_lca_score: number | null
-          raw_material_score: number | null
-          recyclability_percentage: number | null
-          subcategory: string | null
-          transport_score: number | null
-          updated_at: string | null
-          usage_score: number | null
-          water_footprint_liters: number | null
-        }
-        Insert: {
-          alternatives?: Json | null
-          barcode?: string | null
-          brand?: string | null
-          carbon_footprint_kg?: number | null
-          category: string
-          created_at?: string | null
-          disposal_score?: number | null
-          eco_tips?: Json | null
-          id?: number
-          manufacturing_score?: number | null
-          name: string
-          overall_lca_score?: number | null
-          raw_material_score?: number | null
-          recyclability_percentage?: number | null
-          subcategory?: string | null
-          transport_score?: number | null
-          updated_at?: string | null
-          usage_score?: number | null
-          water_footprint_liters?: number | null
-        }
-        Update: {
-          alternatives?: Json | null
-          barcode?: string | null
-          brand?: string | null
-          carbon_footprint_kg?: number | null
-          category?: string
-          created_at?: string | null
-          disposal_score?: number | null
-          eco_tips?: Json | null
-          id?: number
-          manufacturing_score?: number | null
-          name?: string
-          overall_lca_score?: number | null
-          raw_material_score?: number | null
-          recyclability_percentage?: number | null
-          subcategory?: string | null
-          transport_score?: number | null
-          updated_at?: string | null
-          usage_score?: number | null
-          water_footprint_liters?: number | null
-        }
-        Relationships: []
-      }
-      profiles: {
+      users: {
         Row: {
           address: string | null
           avatar_url: string | null
+          city: string | null
           created_at: string | null
-          current_streak: number | null
-          eco_coins: number | null
-          email: string | null
+          email: string
           full_name: string | null
-          house_type: string | null
-          household_size: number | null
           id: string
-          last_login: string | null
+          is_verified: boolean | null
           latitude: number | null
-          level: number | null
-          longest_streak: number | null
           longitude: number | null
-          monthly_carbon_budget: number | null
-          monthly_energy_budget: number | null
-          neighborhood_id: string | null
-          notifications_enabled: boolean | null
           phone: string | null
-          privacy_level: string | null
-          total_points: number | null
+          pincode: string | null
+          state: string | null
+          sustainability_score: number | null
           updated_at: string | null
+          user_type: string | null
           username: string
         }
         Insert: {
           address?: string | null
           avatar_url?: string | null
+          city?: string | null
           created_at?: string | null
-          current_streak?: number | null
-          eco_coins?: number | null
-          email?: string | null
+          email: string
           full_name?: string | null
-          house_type?: string | null
-          household_size?: number | null
-          id: string
-          last_login?: string | null
-          latitude?: number | null
-          level?: number | null
-          longest_streak?: number | null
-          longitude?: number | null
-          monthly_carbon_budget?: number | null
-          monthly_energy_budget?: number | null
-          neighborhood_id?: string | null
-          notifications_enabled?: boolean | null
-          phone?: string | null
-          privacy_level?: string | null
-          total_points?: number | null
-          updated_at?: string | null
-          username: string
-        }
-        Update: {
-          address?: string | null
-          avatar_url?: string | null
-          created_at?: string | null
-          current_streak?: number | null
-          eco_coins?: number | null
-          email?: string | null
-          full_name?: string | null
-          house_type?: string | null
-          household_size?: number | null
           id?: string
-          last_login?: string | null
+          is_verified?: boolean | null
           latitude?: number | null
-          level?: number | null
-          longest_streak?: number | null
           longitude?: number | null
-          monthly_carbon_budget?: number | null
-          monthly_energy_budget?: number | null
-          neighborhood_id?: string | null
-          notifications_enabled?: boolean | null
           phone?: string | null
-          privacy_level?: string | null
-          total_points?: number | null
+          pincode?: string | null
+          state?: string | null
+          sustainability_score?: number | null
           updated_at?: string | null
+          user_type?: string | null
+          username: string
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string | null
+          id?: string
+          is_verified?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          phone?: string | null
+          pincode?: string | null
+          state?: string | null
+          sustainability_score?: number | null
+          updated_at?: string | null
+          user_type?: string | null
           username?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_neighborhood_id_fkey"
-            columns: ["neighborhood_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhoods"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      recycling_logs: {
-        Row: {
-          confidence_score: number | null
-          created_at: string | null
-          disposal_method: string | null
-          eco_coins_earned: number | null
-          id: number
-          item_description: string | null
-          item_image_url: string | null
-          material_type: string | null
-          recyclable: boolean
-          recycling_instructions: string | null
-          user_id: string
-        }
-        Insert: {
-          confidence_score?: number | null
-          created_at?: string | null
-          disposal_method?: string | null
-          eco_coins_earned?: number | null
-          id?: number
-          item_description?: string | null
-          item_image_url?: string | null
-          material_type?: string | null
-          recyclable: boolean
-          recycling_instructions?: string | null
-          user_id: string
-        }
-        Update: {
-          confidence_score?: number | null
-          created_at?: string | null
-          disposal_method?: string | null
-          eco_coins_earned?: number | null
-          id?: number
-          item_description?: string | null
-          item_image_url?: string | null
-          material_type?: string | null
-          recyclable?: boolean
-          recycling_instructions?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "recycling_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "recycling_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "recycling_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      reward_catalog: {
-        Row: {
-          cost_eco_coins: number
-          created_at: string | null
-          description: string | null
-          id: number
-          image_url: string | null
-          is_active: boolean | null
-          name: string
-          reward_type: string
-          stock_quantity: number | null
-          terms_conditions: string | null
-          vendor: string | null
-        }
-        Insert: {
-          cost_eco_coins: number
-          created_at?: string | null
-          description?: string | null
-          id?: number
-          image_url?: string | null
-          is_active?: boolean | null
-          name: string
-          reward_type: string
-          stock_quantity?: number | null
-          terms_conditions?: string | null
-          vendor?: string | null
-        }
-        Update: {
-          cost_eco_coins?: number
-          created_at?: string | null
-          description?: string | null
-          id?: number
-          image_url?: string | null
-          is_active?: boolean | null
-          name?: string
-          reward_type?: string
-          stock_quantity?: number | null
-          terms_conditions?: string | null
-          vendor?: string | null
         }
         Relationships: []
       }
-      reward_redemptions: {
-        Row: {
-          eco_coins_spent: number
-          expires_at: string | null
-          id: number
-          redeemed_at: string | null
-          redemption_code: string | null
-          reward_id: number
-          status: string | null
-          user_id: string
-        }
-        Insert: {
-          eco_coins_spent: number
-          expires_at?: string | null
-          id?: number
-          redeemed_at?: string | null
-          redemption_code?: string | null
-          reward_id: number
-          status?: string | null
-          user_id: string
-        }
-        Update: {
-          eco_coins_spent?: number
-          expires_at?: string | null
-          id?: number
-          redeemed_at?: string | null
-          redemption_code?: string | null
-          reward_id?: number
-          status?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reward_redemptions_reward_id_fkey"
-            columns: ["reward_id"]
-            isOneToOne: false
-            referencedRelation: "reward_catalog"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "reward_redemptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "reward_redemptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "reward_redemptions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      shared_quests: {
-        Row: {
-          created_at: string | null
-          current_progress: number | null
-          deadline: string | null
-          id: number
-          match_id: number
-          quest_description: string
-          quest_title: string
-          reward_eco_coins: number
-          status: string | null
-          target_unit: string
-          target_value: number
-        }
-        Insert: {
-          created_at?: string | null
-          current_progress?: number | null
-          deadline?: string | null
-          id?: number
-          match_id: number
-          quest_description: string
-          quest_title: string
-          reward_eco_coins: number
-          status?: string | null
-          target_unit: string
-          target_value: number
-        }
-        Update: {
-          created_at?: string | null
-          current_progress?: number | null
-          deadline?: string | null
-          id?: number
-          match_id?: number
-          quest_description?: string
-          quest_title?: string
-          reward_eco_coins?: number
-          status?: string | null
-          target_unit?: string
-          target_value?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "shared_quests_match_id_fkey"
-            columns: ["match_id"]
-            isOneToOne: false
-            referencedRelation: "tinder_matches"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      tinder_matches: {
-        Row: {
-          created_at: string | null
-          expires_at: string | null
-          id: number
-          matched_on: string | null
-          reference_id: number | null
-          status: string | null
-          user1_id: string
-          user2_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          expires_at?: string | null
-          id?: number
-          matched_on?: string | null
-          reference_id?: number | null
-          status?: string | null
-          user1_id: string
-          user2_id: string
-        }
-        Update: {
-          created_at?: string | null
-          expires_at?: string | null
-          id?: number
-          matched_on?: string | null
-          reference_id?: number | null
-          status?: string | null
-          user1_id?: string
-          user2_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tinder_matches_user1_id_fkey"
-            columns: ["user1_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "tinder_matches_user1_id_fkey"
-            columns: ["user1_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tinder_matches_user1_id_fkey"
-            columns: ["user1_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tinder_matches_user2_id_fkey"
-            columns: ["user2_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "tinder_matches_user2_id_fkey"
-            columns: ["user2_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tinder_matches_user2_id_fkey"
-            columns: ["user2_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      tip_interactions: {
-        Row: {
-          created_at: string | null
-          id: number
-          interaction_type: string
-          tip_id: number
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          interaction_type: string
-          tip_id: number
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          interaction_type?: string
-          tip_id?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tip_interactions_tip_id_fkey"
-            columns: ["tip_id"]
-            isOneToOne: false
-            referencedRelation: "energy_tips"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tip_interactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "tip_interactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tip_interactions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      uploaded_bills: {
-        Row: {
-          bill_month: string | null
-          created_at: string | null
-          file_name: string | null
-          file_url: string
-          id: number
-          kwh_consumed: number | null
-          parsed_data: Json | null
-          parsing_status: string | null
-          total_amount: number | null
-          user_id: string
-        }
-        Insert: {
-          bill_month?: string | null
-          created_at?: string | null
-          file_name?: string | null
-          file_url: string
-          id?: number
-          kwh_consumed?: number | null
-          parsed_data?: Json | null
-          parsing_status?: string | null
-          total_amount?: number | null
-          user_id: string
-        }
-        Update: {
-          bill_month?: string | null
-          created_at?: string | null
-          file_name?: string | null
-          file_url?: string
-          id?: number
-          kwh_consumed?: number | null
-          parsed_data?: Json | null
-          parsing_status?: string | null
-          total_amount?: number | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "uploaded_bills_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "uploaded_bills_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "uploaded_bills_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_badges: {
-        Row: {
-          badge_id: number
-          earned_at: string | null
-          id: number
-          progress_data: Json | null
-          user_id: string
-        }
-        Insert: {
-          badge_id: number
-          earned_at?: string | null
-          id?: number
-          progress_data?: Json | null
-          user_id: string
-        }
-        Update: {
-          badge_id?: number
-          earned_at?: string | null
-          id?: number
-          progress_data?: Json | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_badges_badge_id_fkey"
-            columns: ["badge_id"]
-            isOneToOne: false
-            referencedRelation: "badges"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_badges_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_badges_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_badges_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_challenges: {
-        Row: {
-          challenge_id: number
-          completed_at: string | null
-          eco_coins_earned: number | null
-          id: number
-          joined_at: string | null
-          points_earned: number | null
-          progress: number | null
-          status: string | null
-          user_id: string
-        }
-        Insert: {
-          challenge_id: number
-          completed_at?: string | null
-          eco_coins_earned?: number | null
-          id?: number
-          joined_at?: string | null
-          points_earned?: number | null
-          progress?: number | null
-          status?: string | null
-          user_id: string
-        }
-        Update: {
-          challenge_id?: number
-          completed_at?: string | null
-          eco_coins_earned?: number | null
-          id?: number
-          joined_at?: string | null
-          points_earned?: number | null
-          progress?: number | null
-          status?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_challenges_challenge_id_fkey"
-            columns: ["challenge_id"]
-            isOneToOne: false
-            referencedRelation: "challenges"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_challenges_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_challenges_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_challenges_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_purchases: {
-        Row: {
-          created_at: string | null
-          eco_coins_impact: number | null
-          id: number
-          price_inr: number | null
-          product_id: number | null
-          purchase_date: string
-          quantity: number
-          receipt_url: string | null
-          source: string | null
-          total_carbon_impact: number | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          eco_coins_impact?: number | null
-          id?: number
-          price_inr?: number | null
-          product_id?: number | null
-          purchase_date: string
-          quantity: number
-          receipt_url?: string | null
-          source?: string | null
-          total_carbon_impact?: number | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          eco_coins_impact?: number | null
-          id?: number
-          price_inr?: number | null
-          product_id?: number | null
-          purchase_date?: string
-          quantity?: number
-          receipt_url?: string | null
-          source?: string | null
-          total_carbon_impact?: number | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_purchases_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "product_database"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_purchases_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_purchases_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_purchases_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
-      active_food_donations: {
+      active_marketplace: {
         Row: {
-          assigned_at: string | null
-          assigned_ngo_name: string | null
           carbon_saved_kg: number | null
+          category_id: number | null
+          category_name: string | null
+          comment_count: number | null
+          condition: string | null
           created_at: string | null
-          delivered_at: string | null
+          delivery_available: boolean | null
+          delivery_radius_km: number | null
           description: string | null
-          donor_id: string | null
-          donor_name: string | null
-          donor_phone: string | null
-          eco_coins_earned: number | null
-          estimated_meals: number | null
-          expiry_time: string | null
-          food_type: string | null
+          eco_certifications: Json | null
           id: number | null
-          ngo_id: number | null
-          ngo_phone: string | null
-          picked_up_at: string | null
+          images: Json | null
+          is_available: boolean | null
+          likes_count: number | null
+          listing_type: string | null
           pickup_address: string | null
           pickup_latitude: number | null
           pickup_longitude: number | null
-          preferred_pickup_time: string | null
-          quantity: number | null
+          price: number | null
+          seller_avatar: string | null
+          seller_id: string | null
+          seller_name: string | null
+          seller_sustainability_score: number | null
+          seller_username: string | null
+          seller_verified: boolean | null
           status: string | null
-          unit: string | null
+          stock_quantity: number | null
+          sustainability_attributes: Json | null
+          sustainability_score: number | null
+          title: string | null
+          total_likes: number | null
+          updated_at: string | null
+          views_count: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "food_donations_donor_id_fkey"
-            columns: ["donor_id"]
+            foreignKeyName: "listings_category_id_fkey"
+            columns: ["category_id"]
             isOneToOne: false
-            referencedRelation: "neighborhood_leaderboard"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "food_donations_donor_id_fkey"
-            columns: ["donor_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "categories"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "food_donations_donor_id_fkey"
-            columns: ["donor_id"]
+            foreignKeyName: "listings_seller_id_fkey"
+            columns: ["seller_id"]
             isOneToOne: false
-            referencedRelation: "user_dashboard_summary"
+            referencedRelation: "user_profiles_summary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "food_donations_ngo_id_fkey"
-            columns: ["ngo_id"]
+            foreignKeyName: "listings_seller_id_fkey"
+            columns: ["seller_id"]
             isOneToOne: false
-            referencedRelation: "ngos"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      neighborhood_leaderboard: {
+      user_profiles_summary: {
         Row: {
-          eco_coins: number | null
-          eco_coins_rank: number | null
-          neighborhood_id: string | null
-          neighborhood_name: string | null
-          points_rank: number | null
-          total_points: number | null
-          user_id: string | null
-          username: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_neighborhood_id_fkey"
-            columns: ["neighborhood_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhoods"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_dashboard_summary: {
-        Row: {
-          badges_earned: number | null
-          challenges_completed: number | null
-          current_month_carbon: number | null
-          current_month_energy: number | null
-          current_streak: number | null
-          eco_coins: number | null
+          active_listings: number | null
+          address: string | null
+          avatar_url: string | null
+          average_rating: number | null
+          city: string | null
+          created_at: string | null
+          email: string | null
+          followers_count: number | null
+          following_count: number | null
+          full_name: string | null
           id: string | null
-          level: number | null
-          neighborhood_name: string | null
-          total_points: number | null
+          is_verified: boolean | null
+          latitude: number | null
+          longitude: number | null
+          phone: string | null
+          pincode: string | null
+          purchases_made: number | null
+          sales_completed: number | null
+          state: string | null
+          sustainability_score: number | null
+          total_reviews: number | null
+          updated_at: string | null
+          user_type: string | null
           username: string | null
+        }
+        Insert: {
+          active_listings?: never
+          address?: string | null
+          avatar_url?: string | null
+          average_rating?: never
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          followers_count?: never
+          following_count?: never
+          full_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          phone?: string | null
+          pincode?: string | null
+          purchases_made?: never
+          sales_completed?: never
+          state?: string | null
+          sustainability_score?: number | null
+          total_reviews?: never
+          updated_at?: string | null
+          user_type?: string | null
+          username?: string | null
+        }
+        Update: {
+          active_listings?: never
+          address?: string | null
+          avatar_url?: string | null
+          average_rating?: never
+          city?: string | null
+          created_at?: string | null
+          email?: string | null
+          followers_count?: never
+          following_count?: never
+          full_name?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          phone?: string | null
+          pincode?: string | null
+          purchases_made?: never
+          sales_completed?: never
+          state?: string | null
+          sustainability_score?: number | null
+          total_reviews?: never
+          updated_at?: string | null
+          user_type?: string | null
+          username?: string | null
         }
         Relationships: []
       }
     }
     Functions: {
-      get_user_monthly_carbon: {
-        Args: { target_month: string; user_uuid: string }
-        Returns: number
-      }
-      get_user_sustainability_score: {
-        Args: { user_uuid: string }
-        Returns: number
+      search_listings: {
+        Args: {
+          category_filter?: number
+          limit_count?: number
+          listing_type_filter?: string
+          max_distance_km?: number
+          max_price?: number
+          min_price?: number
+          min_sustainability_score?: number
+          offset_count?: number
+          search_query?: string
+          sort_by?: string
+          sort_order?: string
+          user_latitude?: number
+          user_longitude?: number
+        }
+        Returns: {
+          distance_km: number
+          listing_id: number
+          price: number
+          seller_username: string
+          sustainability_score: number
+          title: string
+        }[]
       }
     }
     Enums: {
