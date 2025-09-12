@@ -78,7 +78,7 @@ const Marketplace = () => {
   }, []);
 
   useEffect(() => {
-    if (currentTab === 'homemade' && !selectedBusinessId) {
+    if (currentTab === 'handmade' && !selectedBusinessId) {
       fetchBusinesses();
     } else {
       filterProductsByTab();
@@ -111,7 +111,7 @@ const Marketplace = () => {
           sustainability_score: listing.sustainability_score,
           carbon_footprint: listing.carbon_saved_kg,
           condition: listing.condition,
-          is_eco_friendly: listing.listing_type === 'homemade',
+          is_eco_friendly: listing.listing_type === 'handmade',
           is_second_hand: listing.listing_type === 'thrifted',
           listing_type: listing.listing_type,
           business_id: listing.business_id,
@@ -155,7 +155,7 @@ const Marketplace = () => {
       const { data: productCounts } = await supabase
         .from('listings')
         .select('business_id')
-        .eq('listing_type', 'homemade')
+        .eq('listing_type', 'handmade')
         .eq('status', 'active')
         .eq('is_available', true)
         .in('business_id', businessIds);
@@ -198,13 +198,13 @@ const Marketplace = () => {
       case "thrifted":
         filtered = products.filter(p => p.listing_type === 'thrifted');
         break;
-      case "homemade":
+      case "handmade":
         if (selectedBusinessId) {
           filtered = products.filter(p => 
             p.business_id === selectedBusinessId
           );
         } else {
-          filtered = products.filter(p => p.listing_type === 'homemade');
+          filtered = products.filter(p => p.listing_type === 'handmade');
         }
         break;
       case "brands":
@@ -368,12 +368,12 @@ const Marketplace = () => {
 
           <MarketplaceTabs onTabChange={(tab) => {
             setCurrentTab(tab);
-            if (tab !== 'homemade') {
+            if (tab !== 'handmade') {
               handleBackToBusinesses();
             }
           }} onProductUpload={fetchProducts}>
-            {currentTab === 'homemade' && !selectedBusinessId ? (
-              // Show businesses in homemade tab
+            {currentTab === 'handmade' && !selectedBusinessId ? (
+              // Show businesses in handmade tab
               loading ? (
                 <div className="text-center py-20">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-primary mx-auto mb-4"></div>
@@ -398,7 +398,7 @@ const Marketplace = () => {
                   ))}
                 </div>
               )
-            ) : currentTab === 'homemade' && selectedBusinessId ? (
+            ) : currentTab === 'handmade' && selectedBusinessId ? (
               // Show products for selected business
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
@@ -428,7 +428,7 @@ const Marketplace = () => {
                 {showBusinessUpload && (
                   <div className="mb-6">
                     <ProductUploadForm 
-                      listingType="homemade"
+                      listingType="handmade"
                       businessId={selectedBusinessId!}
                       onSuccess={handleBusinessUploadSuccess}
                       onCancel={() => setShowBusinessUpload(false)}

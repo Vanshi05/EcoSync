@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface ProductUploadFormProps {
-  listingType: "thrifted" | "homemade";
+  listingType: "thrifted" | "handmade";
   onSuccess: () => void;
   onCancel: () => void;
   businessId?: number; // Optional business ID for auto-assignment
@@ -35,9 +35,9 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel, businessId
   const { toast } = useToast();
   const { user } = useAuth();
 
-  // Fetch user's businesses if listing type is homemade and no businessId provided
+  // Fetch user's businesses if listing type is handmade and no businessId provided
   useEffect(() => {
-    if (listingType === "homemade" && user && !businessId) {
+    if (listingType === "handmade" && user && !businessId) {
       fetchUserBusinesses();
     } else if (businessId) {
       // If businessId is provided, set it directly
@@ -121,18 +121,18 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel, businessId
     setUploading(true);
     
     try {
-      // Validate business selection for homemade products
-      if (listingType === "homemade" && !formData.business_id) {
+      // Validate business selection for handmade products
+      if (listingType === "handmade" && !formData.business_id) {
         toast({
           title: "Business required",
-          description: "Please select a business for homemade products",
+          description: "Please select a business for handmade products",
           variant: "destructive"
         });
         setUploading(false);
         return;
       }
 
-      const dbListingType = listingType === "thrifted" ? "thrifted" : "homemade";
+      const dbListingType = listingType === "thrifted" ? "thrifted" : "handmade";
       
       // Create the listing
       const listingData: any = {
@@ -147,8 +147,8 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel, businessId
         category_id: formData.category_id ? parseInt(formData.category_id) : null
       };
 
-      // Add business_id for homemade products
-      if (listingType === "homemade" && formData.business_id) {
+      // Add business_id for handmade products
+      if (listingType === "handmade" && formData.business_id) {
         listingData.business_id = parseInt(formData.business_id);
       }
 
@@ -196,7 +196,7 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel, businessId
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Plus className="h-5 w-5" />
-          Upload {listingType === "homemade" ? "Homemade" : "Thrifted"} Product
+          Upload {listingType === "handmade" ? "Handmade" : "Thrifted"} Product
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -280,14 +280,14 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel, businessId
             />
           </div>
 
-          {listingType === "homemade" && !businessId && (
+          {listingType === "handmade" && !businessId && (
             <div className="space-y-2">
               <Label htmlFor="business_id">Select Business *</Label>
               {loadingBusinesses ? (
                 <div className="text-sm text-muted-foreground">Loading businesses...</div>
               ) : userBusinesses.length === 0 ? (
                 <div className="text-sm text-muted-foreground">
-                  No businesses found. Create a business first to upload homemade products.
+                  No businesses found. Create a business first to upload handmade products.
                 </div>
               ) : (
                 <Select 
