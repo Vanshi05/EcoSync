@@ -85,6 +85,7 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
     setUploading(true);
     
     try {
+      const dbListingType = listingType === "thrifted" ? "thrift" : "handmade";
       // Create the listing
       const { data: listing, error: listingError } = await supabase
         .from('listings')
@@ -93,7 +94,7 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
           description: formData.description,
           price: parseFloat(formData.price),
           condition: formData.condition,
-          listing_type: listingType,
+          listing_type: dbListingType,
           pickup_address: formData.pickup_address,
           stock_quantity: parseInt(formData.stock_quantity),
           seller_id: user.id,

@@ -96,8 +96,8 @@ const Marketplace = () => {
           sustainability_score: listing.sustainability_score,
           carbon_footprint: listing.carbon_saved_kg,
           condition: listing.condition,
-          is_eco_friendly: listing.listing_type === 'homemade',
-          is_second_hand: listing.listing_type === 'thrifted',
+          is_eco_friendly: listing.listing_type === 'handmade',
+          is_second_hand: listing.listing_type === 'thrift',
           vendor: brandProfile ? {
             business_name: brandProfile.brand_name,
             is_verified: brandProfile.verification_status === 'verified'
