@@ -6,12 +6,13 @@ import { BusinessCard } from "@/components/marketplace/BusinessCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut, ChevronLeft } from "lucide-react";
+import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut, ChevronLeft, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/marketplace-hero.jpg";
+import { ProductUploadForm } from "@/components/marketplace/ProductUploadForm";
 
 interface Product {
   id: number;
@@ -25,6 +26,7 @@ interface Product {
   is_eco_friendly?: boolean;
   is_second_hand?: boolean;
   listing_type?: string;
+  business_id?: number;
   vendor?: {
     business_name: string;
     is_verified?: boolean;
@@ -59,6 +61,7 @@ const Marketplace = () => {
   const [currentTab, setCurrentTab] = useState("all");
   const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
   const [selectedBusinessUserId, setSelectedBusinessUserId] = useState<string | null>(null);
+  const [showBusinessUpload, setShowBusinessUpload] = useState(false);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
 
@@ -75,7 +78,7 @@ const Marketplace = () => {
   }, []);
 
   useEffect(() => {
-    if (currentTab === 'homemade' && !selectedBusinessId) {
+    if (currentTab === 'handmade' && !selectedBusinessId) {
       fetchBusinesses();
     } else {
       filterProductsByTab();
@@ -88,7 +91,8 @@ const Marketplace = () => {
         .from('listings')
         .select(`
           *,
-          users!listings_seller_id_fkey(username, avatar_url, full_name)
+          users!listings_seller_id_fkey(username, avatar_url, full_name),
+          home_businesses:business_id(business_name)
         `)
         .eq('status', 'active')
         .eq('is_available', true)
@@ -97,20 +101,7 @@ const Marketplace = () => {
 
       if (error) throw error;
 
-      // Get home businesses for these users
-      const userIds = data?.map(listing => listing.seller_id) || [];
-      const { data: homeBusinesses } = await supabase
-        .from('home_businesses')
-        .select('user_id, business_name')
-        .in('user_id', userIds);
-
-      const homeBusinessesMap = new Map(
-        homeBusinesses?.map(hb => [hb.user_id, hb]) || []
-      );
-
       const formattedProducts = data?.map(listing => {
-        const homeBusiness = homeBusinessesMap.get(listing.seller_id);
-        
         return {
           id: listing.id,
           name: listing.title,
@@ -120,11 +111,12 @@ const Marketplace = () => {
           sustainability_score: listing.sustainability_score,
           carbon_footprint: listing.carbon_saved_kg,
           condition: listing.condition,
-          is_eco_friendly: listing.listing_type === 'homemade',
+          is_eco_friendly: listing.listing_type === 'handmade',
           is_second_hand: listing.listing_type === 'thrifted',
           listing_type: listing.listing_type,
-          vendor: homeBusiness ? {
-            business_name: homeBusiness.business_name,
+          business_id: listing.business_id,
+          vendor: listing.home_businesses ? {
+            business_name: listing.home_businesses.business_name,
             is_verified: false
           } : undefined,
           seller: {
@@ -158,19 +150,19 @@ const Marketplace = () => {
 
       if (error) throw error;
 
-      // Get product count for each business
-      const businessIds = data?.map(b => b.user_id) || [];
+      // Get product count for each business using business_id
+      const businessIds = data?.map(b => b.id) || [];
       const { data: productCounts } = await supabase
         .from('listings')
-        .select('seller_id')
-        .eq('listing_type', 'homemade')
+        .select('business_id')
+        .eq('listing_type', 'handmade')
         .eq('status', 'active')
         .eq('is_available', true)
-        .in('seller_id', businessIds);
+        .in('business_id', businessIds);
 
       const countMap = new Map();
       productCounts?.forEach(p => {
-        countMap.set(p.seller_id, (countMap.get(p.seller_id) || 0) + 1);
+        countMap.set(p.business_id, (countMap.get(p.business_id) || 0) + 1);
       });
 
       const formattedBusinesses = data?.map(business => ({
@@ -185,7 +177,7 @@ const Marketplace = () => {
           city: business.users.city,
           sustainability_score: business.users.sustainability_score
         } : undefined,
-        product_count: countMap.get(business.user_id) || 0
+        product_count: countMap.get(business.id) || 0
       })) || [];
 
       setBusinesses(formattedBusinesses);
@@ -206,14 +198,13 @@ const Marketplace = () => {
       case "thrifted":
         filtered = products.filter(p => p.listing_type === 'thrifted');
         break;
-      case "homemade":
-        if (selectedBusinessUserId) {
+      case "handmade":
+        if (selectedBusinessId) {
           filtered = products.filter(p => 
-            p.listing_type === 'homemade' && 
-            p.seller?.username === products.find(pr => pr.seller?.username)?.seller?.username
+            p.business_id === selectedBusinessId
           );
         } else {
-          filtered = products.filter(p => p.listing_type === 'homemade');
+          filtered = products.filter(p => p.listing_type === 'handmade');
         }
         break;
       case "brands":
@@ -230,10 +221,9 @@ const Marketplace = () => {
     setSelectedBusinessId(businessId);
     setSelectedBusinessUserId(userId);
     
-    // Filter products for this specific business owner
+    // Filter products for this specific business using business_id
     const businessProducts = products.filter(p => 
-      p.listing_type === 'homemade' && 
-      p.seller?.username === businesses.find(b => b.user_id === userId)?.owner?.username
+      p.business_id === businessId
     );
     setFilteredProducts(businessProducts);
   };
@@ -241,6 +231,12 @@ const Marketplace = () => {
   const handleBackToBusinesses = () => {
     setSelectedBusinessId(null);
     setSelectedBusinessUserId(null);
+    setShowBusinessUpload(false);
+  };
+
+  const handleBusinessUploadSuccess = () => {
+    setShowBusinessUpload(false);
+    fetchProducts();
   };
 
   const handleSearch = (query: string) => {
@@ -372,12 +368,12 @@ const Marketplace = () => {
 
           <MarketplaceTabs onTabChange={(tab) => {
             setCurrentTab(tab);
-            if (tab !== 'homemade') {
+            if (tab !== 'handmade') {
               handleBackToBusinesses();
             }
           }} onProductUpload={fetchProducts}>
-            {currentTab === 'homemade' && !selectedBusinessId ? (
-              // Show businesses in homemade tab
+            {currentTab === 'handmade' && !selectedBusinessId ? (
+              // Show businesses in handmade tab
               loading ? (
                 <div className="text-center py-20">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-primary mx-auto mb-4"></div>
@@ -402,23 +398,43 @@ const Marketplace = () => {
                   ))}
                 </div>
               )
-            ) : currentTab === 'homemade' && selectedBusinessId ? (
+            ) : currentTab === 'handmade' && selectedBusinessId ? (
               // Show products for selected business
               <div className="space-y-6">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleBackToBusinesses}
+                      className="flex items-center gap-2"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Back to Businesses
+                    </Button>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Products from {businesses.find(b => b.id === selectedBusinessId)?.business_name}
+                    </h3>
+                  </div>
                   <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleBackToBusinesses}
-                    className="flex items-center gap-2"
+                    onClick={() => setShowBusinessUpload(true)}
+                    className="bg-gradient-primary flex items-center gap-2"
                   >
-                    <ChevronLeft className="h-4 w-4" />
-                    Back to Businesses
+                    <Plus className="h-4 w-4" />
+                    Upload Product
                   </Button>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Products from {businesses.find(b => b.id === selectedBusinessId)?.business_name}
-                  </h3>
                 </div>
+
+                {showBusinessUpload && (
+                  <div className="mb-6">
+                    <ProductUploadForm 
+                      listingType="handmade"
+                      businessId={selectedBusinessId!}
+                      onSuccess={handleBusinessUploadSuccess}
+                      onCancel={() => setShowBusinessUpload(false)}
+                    />
+                  </div>
+                )}
                 
                 {filteredProducts.length === 0 ? (
                   <div className="text-center py-20 space-y-4">

@@ -47,7 +47,7 @@ export function BusinessCard({ business, onClick }: BusinessCardProps) {
                 {business.business_name}
               </CardTitle>
               <Badge className="bg-eco-primary/20 text-eco-primary border-eco-primary/30">
-                Homemade
+                Handmade
               </Badge>
             </div>
             
