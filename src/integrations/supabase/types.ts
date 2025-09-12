@@ -215,7 +215,7 @@ export type Database = {
           description: string | null
           id: number
           updated_at: string
-          user_id: string
+          user_id: string | null
           website_url: string | null
         }
         Insert: {
@@ -225,7 +225,7 @@ export type Database = {
           description?: string | null
           id?: number
           updated_at?: string
-          user_id: string
+          user_id?: string | null
           website_url?: string | null
         }
         Update: {
@@ -235,7 +235,7 @@ export type Database = {
           description?: string | null
           id?: number
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
           website_url?: string | null
         }
         Relationships: [
@@ -382,7 +382,7 @@ export type Database = {
           pickup_latitude: number | null
           pickup_longitude: number | null
           price: number
-          seller_id: string
+          seller_id: string | null
           status: string | null
           stock_quantity: number | null
           sustainability_attributes: Json | null
@@ -410,7 +410,7 @@ export type Database = {
           pickup_latitude?: number | null
           pickup_longitude?: number | null
           price: number
-          seller_id: string
+          seller_id?: string | null
           status?: string | null
           stock_quantity?: number | null
           sustainability_attributes?: Json | null
@@ -438,7 +438,7 @@ export type Database = {
           pickup_latitude?: number | null
           pickup_longitude?: number | null
           price?: number
-          seller_id?: string
+          seller_id?: string | null
           status?: string | null
           stock_quantity?: number | null
           sustainability_attributes?: Json | null
