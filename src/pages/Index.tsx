@@ -43,8 +43,8 @@ const Index = () => {
               <Link to="/community" className="text-foreground hover:text-eco-primary transition-colors">
                 Community
               </Link>
-              <Button className="bg-gradient-primary hover:shadow-glow transition-all">
-                Join Now
+              <Button asChild className="bg-gradient-primary hover:shadow-glow transition-all">
+                <Link to="/auth">Join Now</Link>
               </Button>
             </div>
           </div>
@@ -87,9 +87,9 @@ const Index = () => {
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
             <Button size="lg" asChild className="bg-gradient-primary hover:shadow-glow transition-all text-lg px-8 py-4">
-              <Link to="/marketplace">
+              <Link to="/auth">
                 <ShoppingBag className="h-5 w-5 mr-2" />
-                Explore Marketplace
+                Get Started
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Link>
             </Button>
@@ -218,7 +218,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild className="bg-gradient-primary hover:shadow-glow transition-all text-lg px-8 py-4">
-              <Link to="/marketplace">
+              <Link to="/auth">
                 Get Started Now
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Link>
