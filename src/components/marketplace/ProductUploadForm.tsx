@@ -132,7 +132,7 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel, businessId
         return;
       }
 
-      const dbListingType = listingType === "thrifted" ? "thrifted" : "handmade";
+      const dbListingType = listingType === "thrifted" ? "thrift" : "handmade";
       
       // Create the listing
       const listingData: any = {
