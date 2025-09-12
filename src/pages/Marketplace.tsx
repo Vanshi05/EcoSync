@@ -3,6 +3,7 @@ import { MarketplaceHeader } from "@/components/marketplace/MarketplaceHeader";
 import { MarketplaceTabs } from "@/components/marketplace/MarketplaceTabs";
 import { ProductCard } from "@/components/marketplace/ProductCard";
 import { BusinessCard } from "@/components/marketplace/BusinessCard";
+import { BrandProfileCard } from "@/components/marketplace/BrandProfileCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -111,16 +112,19 @@ const Marketplace = () => {
           sustainability_score: listing.sustainability_score,
           carbon_footprint: listing.carbon_saved_kg,
           condition: listing.condition,
-          is_eco_friendly: listing.listing_type === 'handmade',
+          is_eco_friendly: listing.listing_type === 'handmade' || listing.listing_type === 'brand_product',
           is_second_hand: listing.listing_type === 'thrifted',
           listing_type: listing.listing_type,
           business_id: listing.business_id,
           vendor: listing.home_businesses ? {
             business_name: listing.home_businesses.business_name,
             is_verified: false
+          } : listing.listing_type === 'brand_product' ? {
+            business_name: 'Sustainable Brand',
+            is_verified: true
           } : undefined,
           seller: {
-            username: listing.users?.username || 'Unknown User',
+            username: listing.users?.username || 'Sustainable Brand',
             avatar_url: listing.users?.avatar_url
           }
         };
@@ -208,7 +212,7 @@ const Marketplace = () => {
         }
         break;
       case "brands":
-        filtered = products.filter(p => p.vendor?.is_verified);
+        filtered = products.filter(p => p.listing_type === 'brand_product');
         break;
       default:
         filtered = products;
@@ -476,18 +480,23 @@ const Marketplace = () => {
                   </p>
                 </div>
               ) : (
-                <div className={
-                  currentView === "grid" 
-                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                    : "space-y-4"
-                }>
-                  {filteredProducts.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      view={currentView}
-                    />
-                  ))}
+                <div className="space-y-6">
+                  {currentTab === 'brands' && (
+                    <BrandProfileCard brandName="Patagonia" />
+                  )}
+                  <div className={
+                    currentView === "grid" 
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                      : "space-y-4"
+                  }>
+                    {filteredProducts.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        view={currentView}
+                      />
+                    ))}
+                  </div>
                 </div>
               )
             )}
