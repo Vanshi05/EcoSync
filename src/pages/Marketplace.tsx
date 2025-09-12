@@ -25,6 +25,7 @@ interface Product {
   is_eco_friendly?: boolean;
   is_second_hand?: boolean;
   listing_type?: string;
+  business_id?: number;
   vendor?: {
     business_name: string;
     is_verified?: boolean;
@@ -88,7 +89,8 @@ const Marketplace = () => {
         .from('listings')
         .select(`
           *,
-          users!listings_seller_id_fkey(username, avatar_url, full_name)
+          users!listings_seller_id_fkey(username, avatar_url, full_name),
+          home_businesses!listings_business_id_fkey(business_name)
         `)
         .eq('status', 'active')
         .eq('is_available', true)
@@ -97,20 +99,7 @@ const Marketplace = () => {
 
       if (error) throw error;
 
-      // Get home businesses for these users
-      const userIds = data?.map(listing => listing.seller_id) || [];
-      const { data: homeBusinesses } = await supabase
-        .from('home_businesses')
-        .select('user_id, business_name')
-        .in('user_id', userIds);
-
-      const homeBusinessesMap = new Map(
-        homeBusinesses?.map(hb => [hb.user_id, hb]) || []
-      );
-
       const formattedProducts = data?.map(listing => {
-        const homeBusiness = homeBusinessesMap.get(listing.seller_id);
-        
         return {
           id: listing.id,
           name: listing.title,
@@ -123,8 +112,9 @@ const Marketplace = () => {
           is_eco_friendly: listing.listing_type === 'homemade',
           is_second_hand: listing.listing_type === 'thrifted',
           listing_type: listing.listing_type,
-          vendor: homeBusiness ? {
-            business_name: homeBusiness.business_name,
+          business_id: listing.business_id,
+          vendor: listing.home_businesses ? {
+            business_name: listing.home_businesses.business_name,
             is_verified: false
           } : undefined,
           seller: {
@@ -158,19 +148,19 @@ const Marketplace = () => {
 
       if (error) throw error;
 
-      // Get product count for each business
-      const businessIds = data?.map(b => b.user_id) || [];
+      // Get product count for each business using business_id
+      const businessIds = data?.map(b => b.id) || [];
       const { data: productCounts } = await supabase
         .from('listings')
-        .select('seller_id')
+        .select('business_id')
         .eq('listing_type', 'homemade')
         .eq('status', 'active')
         .eq('is_available', true)
-        .in('seller_id', businessIds);
+        .in('business_id', businessIds);
 
       const countMap = new Map();
       productCounts?.forEach(p => {
-        countMap.set(p.seller_id, (countMap.get(p.seller_id) || 0) + 1);
+        countMap.set(p.business_id, (countMap.get(p.business_id) || 0) + 1);
       });
 
       const formattedBusinesses = data?.map(business => ({
@@ -185,7 +175,7 @@ const Marketplace = () => {
           city: business.users.city,
           sustainability_score: business.users.sustainability_score
         } : undefined,
-        product_count: countMap.get(business.user_id) || 0
+        product_count: countMap.get(business.id) || 0
       })) || [];
 
       setBusinesses(formattedBusinesses);
@@ -207,10 +197,10 @@ const Marketplace = () => {
         filtered = products.filter(p => p.listing_type === 'thrifted');
         break;
       case "homemade":
-        if (selectedBusinessUserId) {
+        if (selectedBusinessId) {
           filtered = products.filter(p => 
             p.listing_type === 'homemade' && 
-            p.seller?.username === products.find(pr => pr.seller?.username)?.seller?.username
+            p.business_id === selectedBusinessId
           );
         } else {
           filtered = products.filter(p => p.listing_type === 'homemade');
@@ -230,10 +220,10 @@ const Marketplace = () => {
     setSelectedBusinessId(businessId);
     setSelectedBusinessUserId(userId);
     
-    // Filter products for this specific business owner
+    // Filter products for this specific business using business_id
     const businessProducts = products.filter(p => 
       p.listing_type === 'homemade' && 
-      p.seller?.username === businesses.find(b => b.user_id === userId)?.owner?.username
+      p.business_id === businessId
     );
     setFilteredProducts(businessProducts);
   };

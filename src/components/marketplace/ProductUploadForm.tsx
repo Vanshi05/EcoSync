@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,12 +24,44 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
     condition: "good",
     category_id: "",
     pickup_address: "",
-    stock_quantity: "1"
+    stock_quantity: "1",
+    business_id: ""
   });
   const [images, setImages] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [userBusinesses, setUserBusinesses] = useState<any[]>([]);
+  const [loadingBusinesses, setLoadingBusinesses] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Fetch user's businesses if listing type is homemade
+  useEffect(() => {
+    if (listingType === "homemade" && user) {
+      fetchUserBusinesses();
+    }
+  }, [listingType, user]);
+
+  const fetchUserBusinesses = async () => {
+    setLoadingBusinesses(true);
+    try {
+      const { data, error } = await supabase
+        .from('home_businesses')
+        .select('id, business_name')
+        .eq('user_id', user?.id);
+        
+      if (error) throw error;
+      setUserBusinesses(data || []);
+    } catch (error) {
+      console.error('Error fetching businesses:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load your businesses",
+        variant: "destructive"
+      });
+    } finally {
+      setLoadingBusinesses(false);
+    }
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -85,21 +117,39 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
     setUploading(true);
     
     try {
-      const dbListingType = listingType === "thrifted" ? "thrift" : "handmade";
+      // Validate business selection for homemade products
+      if (listingType === "homemade" && !formData.business_id) {
+        toast({
+          title: "Business required",
+          description: "Please select a business for homemade products",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const dbListingType = listingType === "thrifted" ? "thrifted" : "homemade";
+      
       // Create the listing
+      const listingData: any = {
+        title: formData.title,
+        description: formData.description,
+        price: parseFloat(formData.price),
+        condition: formData.condition,
+        listing_type: dbListingType,
+        pickup_address: formData.pickup_address,
+        stock_quantity: parseInt(formData.stock_quantity),
+        seller_id: user.id,
+        category_id: formData.category_id ? parseInt(formData.category_id) : null
+      };
+
+      // Add business_id for homemade products
+      if (listingType === "homemade" && formData.business_id) {
+        listingData.business_id = parseInt(formData.business_id);
+      }
+
       const { data: listing, error: listingError } = await supabase
         .from('listings')
-        .insert({
-          title: formData.title,
-          description: formData.description,
-          price: parseFloat(formData.price),
-          condition: formData.condition,
-          listing_type: dbListingType,
-          pickup_address: formData.pickup_address,
-          stock_quantity: parseInt(formData.stock_quantity),
-          seller_id: user.id,
-          category_id: formData.category_id ? parseInt(formData.category_id) : null
-        })
+        .insert(listingData)
         .select()
         .single();
 
@@ -224,6 +274,35 @@ export function ProductUploadForm({ listingType, onSuccess, onCancel }: ProductU
               placeholder="Where can buyers pick this up?"
             />
           </div>
+
+          {listingType === "homemade" && (
+            <div className="space-y-2">
+              <Label htmlFor="business_id">Select Business *</Label>
+              {loadingBusinesses ? (
+                <div className="text-sm text-muted-foreground">Loading businesses...</div>
+              ) : userBusinesses.length === 0 ? (
+                <div className="text-sm text-muted-foreground">
+                  No businesses found. Create a business first to upload homemade products.
+                </div>
+              ) : (
+                <Select 
+                  value={formData.business_id} 
+                  onValueChange={(value) => setFormData({ ...formData, business_id: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your business" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {userBusinesses.map((business) => (
+                      <SelectItem key={business.id} value={business.id.toString()}>
+                        {business.business_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label>Product Images (Max 5)</Label>
