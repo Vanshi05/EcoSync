@@ -24,7 +24,6 @@ export type Database = {
           description: string | null
           id: number
           sustainability_report_url: string | null
-          user_id: string
           verification_documents: Json | null
           verification_status: string | null
           verified_at: string | null
@@ -39,7 +38,6 @@ export type Database = {
           description?: string | null
           id?: number
           sustainability_report_url?: string | null
-          user_id: string
           verification_documents?: Json | null
           verification_status?: string | null
           verified_at?: string | null
@@ -54,28 +52,12 @@ export type Database = {
           description?: string | null
           id?: number
           sustainability_report_url?: string | null
-          user_id?: string
           verification_documents?: Json | null
           verification_status?: string | null
           verified_at?: string | null
           website_url?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "brand_profiles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "user_profiles_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "brand_profiles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       categories: {
         Row: {
