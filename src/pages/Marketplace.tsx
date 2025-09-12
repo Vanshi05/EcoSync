@@ -23,6 +23,7 @@ interface Product {
   condition?: string;
   is_eco_friendly?: boolean;
   is_second_hand?: boolean;
+  listing_type?: string;
   vendor?: {
     business_name: string;
     is_verified?: boolean;
@@ -73,19 +74,29 @@ const Marketplace = () => {
 
       if (error) throw error;
 
-      // Get brand profiles separately for users who have them
+      // Get brand profiles and home businesses separately for users who have them
       const userIds = data?.map(listing => listing.seller_id) || [];
       const { data: brandProfiles } = await supabase
         .from('brand_profiles')
         .select('user_id, brand_name, verification_status')
         .in('user_id', userIds);
 
+      const { data: homeBusinesses } = await supabase
+        .from('home_businesses')
+        .select('user_id, business_name')
+        .in('user_id', userIds);
+
       const brandProfilesMap = new Map(
         brandProfiles?.map(bp => [bp.user_id, bp]) || []
       );
 
+      const homeBusinessesMap = new Map(
+        homeBusinesses?.map(hb => [hb.user_id, hb]) || []
+      );
+
       const formattedProducts = data?.map(listing => {
         const brandProfile = brandProfilesMap.get(listing.seller_id);
+        const homeBusiness = homeBusinessesMap.get(listing.seller_id);
         
         return {
           id: listing.id,
@@ -96,11 +107,15 @@ const Marketplace = () => {
           sustainability_score: listing.sustainability_score,
           carbon_footprint: listing.carbon_saved_kg,
           condition: listing.condition,
-          is_eco_friendly: listing.listing_type === 'handmade',
-          is_second_hand: listing.listing_type === 'thrift',
+          is_eco_friendly: listing.listing_type === 'homemade',
+          is_second_hand: listing.listing_type === 'thrifted',
+          listing_type: listing.listing_type,
           vendor: brandProfile ? {
             business_name: brandProfile.brand_name,
             is_verified: brandProfile.verification_status === 'verified'
+          } : homeBusiness ? {
+            business_name: homeBusiness.business_name,
+            is_verified: false
           } : undefined,
           seller: {
             username: listing.users?.username || 'Unknown User',
@@ -127,10 +142,10 @@ const Marketplace = () => {
     
     switch (currentTab) {
       case "thrifted":
-        filtered = products.filter(p => p.is_second_hand);
+        filtered = products.filter(p => p.listing_type === 'thrifted');
         break;
       case "homemade":
-        filtered = products.filter(p => !p.vendor?.business_name);
+        filtered = products.filter(p => p.listing_type === 'homemade');
         break;
       case "brands":
         filtered = products.filter(p => p.vendor?.is_verified);

@@ -225,6 +225,54 @@ export type Database = {
           },
         ]
       }
+      home_businesses: {
+        Row: {
+          business_name: string
+          business_registration: string | null
+          created_at: string
+          description: string | null
+          id: number
+          updated_at: string
+          user_id: string
+          website_url: string | null
+        }
+        Insert: {
+          business_name: string
+          business_registration?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          updated_at?: string
+          user_id: string
+          website_url?: string | null
+        }
+        Update: {
+          business_name?: string
+          business_registration?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          updated_at?: string
+          user_id?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "home_businesses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "home_businesses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lca_data: {
         Row: {
           Brand_Name: string | null
