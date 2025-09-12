@@ -10,7 +10,7 @@ import Auth from "./pages/Auth";
 import Marketplace from "./pages/Marketplace";
 import CarbonBudget from "./pages/CarbonBudget";
 import NotFound from "./pages/NotFound";
-
+import TripTracker from "./pages/TripTracker";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -23,6 +23,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/trip-tracker" element={<TripTracker />} />
             <Route path="/carbon-budget" element={<CarbonBudget />} />
             <Route 
               path="/marketplace" 
