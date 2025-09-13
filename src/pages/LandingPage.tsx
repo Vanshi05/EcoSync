@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAnimatedCounter } from '@/hooks/useAnimatedCounter';
 import { 
   Leaf, 
   Users, 
@@ -15,6 +16,10 @@ import {
 } from 'lucide-react';
 
 const LandingPage = () => {
+  const activeMembers = useAnimatedCounter(10000, 2000, 500);
+  const tripsTracked = useAnimatedCounter(50000, 2500, 800);
+  const co2Saved = useAnimatedCounter(2.3, 2000, 1100);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-eco-muted/20 to-background">
       {/* Header */}
@@ -40,17 +45,21 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="px-6 py-20">
-        <div className="max-w-7xl mx-auto text-center space-y-8">
+      {/* Hero Section with Map Background */}
+      <section 
+        className="relative min-h-screen bg-cover bg-center bg-fixed px-6 py-20"
+        style={{ backgroundImage: 'url(/map.png)' }}
+      >
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="relative z-10 max-w-7xl mx-auto text-center space-y-8 flex flex-col justify-center min-h-screen">
           <div className="space-y-4">
-            <h2 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
+            <h2 className="text-5xl md:text-6xl font-bold text-white leading-tight">
               Build Your
               <span className="bg-gradient-primary bg-clip-text text-transparent block">
                 Sustainable Future
               </span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
               Join a community of eco-conscious individuals tracking carbon footprints, 
               sharing sustainable products, and creating positive environmental impact together.
             </p>
@@ -71,16 +80,22 @@ const LandingPage = () => {
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
             <div className="text-center">
-              <div className="text-3xl font-bold text-eco-primary">10K+</div>
-              <div className="text-muted-foreground">Active Members</div>
+              <div className="text-3xl font-bold text-eco-primary">
+                {activeMembers.toLocaleString()}+
+              </div>
+              <div className="text-white/80">Active Members</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-eco-primary">50K+</div>
-              <div className="text-muted-foreground">Trips Tracked</div>
+              <div className="text-3xl font-bold text-eco-primary">
+                {tripsTracked.toLocaleString()}+
+              </div>
+              <div className="text-white/80">Trips Tracked</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-eco-primary">2.3M</div>
-              <div className="text-muted-foreground">CO₂ Saved (kg)</div>
+              <div className="text-3xl font-bold text-eco-primary">
+                {co2Saved.toFixed(1)}M
+              </div>
+              <div className="text-white/80">CO₂ Saved (kg)</div>
             </div>
           </div>
         </div>
@@ -170,24 +185,6 @@ const LandingPage = () => {
                 </p>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Map Background Section */}
-      <section 
-        className="relative h-screen bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: 'url(/map.png)' }}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative z-10 flex items-center justify-center h-full">
-          <div className="text-center text-white space-y-6 max-w-4xl px-6">
-            <h3 className="text-4xl md:text-5xl font-bold">
-              Connect Globally, Act Locally
-            </h3>
-            <p className="text-xl text-white/90">
-              Join a worldwide network of sustainable communities making real environmental impact in their neighborhoods.
-            </p>
           </div>
         </div>
       </section>
