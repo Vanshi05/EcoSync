@@ -389,7 +389,6 @@ const Challenges = () => {
                         <Button 
                           className="flex-1 bg-gradient-primary hover:shadow-glow"
                           onClick={() => completeChallenge(challenge.id)}
-                          disabled={challenge.progress < 100}
                         >
                           <CheckCircle2 className="h-4 w-4 mr-2" />
                           Mark Complete
