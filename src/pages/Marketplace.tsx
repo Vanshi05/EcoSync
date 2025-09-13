@@ -11,7 +11,7 @@ import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut, ChevronLeft
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import heroImage from "@/assets/marketplace-hero.jpg";
 import { ProductUploadForm } from "@/components/marketplace/ProductUploadForm";
 
@@ -68,6 +68,7 @@ const Marketplace = () => {
   const [showBusinessUpload, setShowBusinessUpload] = useState(false);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await signOut();
