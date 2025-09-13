@@ -182,6 +182,24 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Map Background Section */}
+      <section 
+        className="relative h-screen bg-cover bg-center bg-fixed"
+        style={{ backgroundImage: 'url(/map.png)' }}
+      >
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="relative z-10 flex items-center justify-center h-full">
+          <div className="text-center text-white space-y-6 max-w-4xl px-6">
+            <h3 className="text-4xl md:text-5xl font-bold">
+              Connect Globally, Act Locally
+            </h3>
+            <p className="text-xl text-white/90">
+              Join a worldwide network of sustainable communities making real environmental impact in their neighborhoods.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Benefits Section */}
       <section className="px-6 py-20">
         <div className="max-w-7xl mx-auto">
