@@ -107,20 +107,35 @@ const EcoConnect = () => {
 
       if (error) throw error;
 
-      const formattedUsers = data?.map(user => ({
-        id: user.id || '',
-        full_name: user.full_name || 'Eco Enthusiast',
-        username: user.username || 'eco_user',
-        avatar_url: user.avatar_url || `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000000000)}?w=400&h=400&fit=crop&crop=face`,
-        sustainability_score: user.sustainability_score || Math.floor(Math.random() * 100) + 50,
-        city: user.city || 'EcoCity',
-        state: user.state || 'Green State',
-        active_listings: user.active_listings || Math.floor(Math.random() * 20),
-        sales_completed: user.sales_completed || Math.floor(Math.random() * 50),
-        average_rating: user.average_rating || Math.floor(Math.random() * 2) + 3.5,
-        followers_count: user.followers_count || Math.floor(Math.random() * 500),
-        following_count: user.following_count || Math.floor(Math.random() * 200)
-      })) || [];
+      const formattedUsers = data?.map((user, index) => {
+        const profileImages = [
+          'https://images.unsplash.com/photo-1494790108755-2616b612b820?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=face',
+          'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop&crop=face'
+        ];
+        
+        return {
+          id: user.id || '',
+          full_name: user.full_name || 'Eco Enthusiast',
+          username: user.username || 'eco_user',
+          avatar_url: user.avatar_url || profileImages[index % profileImages.length],
+          sustainability_score: user.sustainability_score || Math.floor(Math.random() * 100) + 50,
+          city: user.city || 'EcoCity',
+          state: user.state || 'Green State',
+          active_listings: user.active_listings || Math.floor(Math.random() * 20),
+          sales_completed: user.sales_completed || Math.floor(Math.random() * 50),
+          average_rating: user.average_rating || Math.floor(Math.random() * 2) + 3.5,
+          followers_count: user.followers_count || Math.floor(Math.random() * 500),
+          following_count: user.following_count || Math.floor(Math.random() * 200)
+        };
+      }) || [];
 
       setUsers(formattedUsers);
     } catch (error) {
@@ -154,6 +169,62 @@ const EcoConnect = () => {
           average_rating: 4.6,
           followers_count: 156,
           following_count: 134
+        },
+        {
+          id: '3',
+          full_name: 'Priya Sharma',
+          username: 'sustainable_priya',
+          avatar_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+          sustainability_score: 89,
+          city: 'Bangalore',
+          state: 'Karnataka',
+          active_listings: 15,
+          sales_completed: 28,
+          average_rating: 4.7,
+          followers_count: 320,
+          following_count: 95
+        },
+        {
+          id: '4',
+          full_name: 'Rahul Kumar',
+          username: 'eco_rahul',
+          avatar_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+          sustainability_score: 85,
+          city: 'Chennai',
+          state: 'Tamil Nadu',
+          active_listings: 10,
+          sales_completed: 18,
+          average_rating: 4.5,
+          followers_count: 180,
+          following_count: 210
+        },
+        {
+          id: '5',
+          full_name: 'Sneha Gupta',
+          username: 'green_sneha',
+          avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face',
+          sustainability_score: 94,
+          city: 'Pune',
+          state: 'Maharashtra',
+          active_listings: 18,
+          sales_completed: 42,
+          average_rating: 4.9,
+          followers_count: 387,
+          following_count: 156
+        },
+        {
+          id: '6',
+          full_name: 'Vikram Mehta',
+          username: 'planet_vikram',
+          avatar_url: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=400&fit=crop&crop=face',
+          sustainability_score: 78,
+          city: 'Hyderabad',
+          state: 'Telangana',
+          active_listings: 6,
+          sales_completed: 14,
+          average_rating: 4.3,
+          followers_count: 98,
+          following_count: 167
         }
       ]);
     } finally {
