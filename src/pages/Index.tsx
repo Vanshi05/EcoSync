@@ -12,15 +12,13 @@ import {
 import { 
   Leaf, 
   Users, 
-  Recycle, 
-  TrendingUp, 
   ArrowRight, 
   ShoppingBag,
-  Home,
-  Award,
-  BarChart3,
   User,
-  LogOut
+  LogOut,
+  FileText,
+  MapPin,
+  Camera
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -160,7 +158,7 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-border/50 group">
             <CardContent className="p-8 text-center space-y-4">
               <div className="bg-eco-primary/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -170,23 +168,10 @@ const Index = () => {
               <p className="text-muted-foreground">
                 Buy, sell, and trade eco-friendly products within your neighborhood community.
               </p>
-              <Button variant="ghost" className="text-eco-primary hover:text-eco-primary/80">
-                Explore Marketplace →
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-border/50 group">
-            <CardContent className="p-8 text-center space-y-4">
-              <div className="bg-sustainable/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
-                <BarChart3 className="h-8 w-8 text-sustainable" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground">Impact Tracking</h3>
-              <p className="text-muted-foreground">
-                Monitor your carbon footprint, energy usage, and sustainability metrics in real-time.
-              </p>
-              <Button variant="ghost" className="text-sustainable hover:text-sustainable/80">
-                View Dashboard →
+              <Button variant="ghost" className="text-eco-primary hover:text-eco-primary/80" asChild>
+                <Link to="/marketplace">
+                  Explore Marketplace →
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -210,15 +195,45 @@ const Index = () => {
 
           <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-border/50 group">
             <CardContent className="p-8 text-center space-y-4">
-              <div className="bg-verified/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Award className="h-8 w-8 text-verified" />
+              <div className="bg-sustainable/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
+                <FileText className="h-8 w-8 text-sustainable" />
               </div>
-              <h3 className="text-xl font-semibold text-foreground">Eco Rewards</h3>
+              <h3 className="text-xl font-semibold text-foreground">Bill Advisor</h3>
               <p className="text-muted-foreground">
-                Earn eco-coins for sustainable actions and redeem them for local rewards.
+                Upload your electricity bill and get actionable tips to reduce energy usage and carbon emissions.
+              </p>
+              <Button variant="ghost" className="text-sustainable hover:text-sustainable/80">
+                Get Bill Tips →
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-border/50 group">
+            <CardContent className="p-8 text-center space-y-4">
+              <div className="bg-verified/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MapPin className="h-8 w-8 text-verified" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground">Travel Score</h3>
+              <p className="text-muted-foreground">
+                Track your trips and see the carbon footprint of your travel, helping you make greener choices.
               </p>
               <Button variant="ghost" className="text-verified hover:text-verified/80">
-                Earn Rewards →
+                Track Travel →
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-border/50 group lg:col-span-1 md:col-span-2 mx-auto max-w-sm">
+            <CardContent className="p-8 text-center space-y-4">
+              <div className="bg-muted/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Camera className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground">Impact Calculator</h3>
+              <p className="text-muted-foreground">
+                Upload a product image to receive its environmental impact score and understand its carbon footprint.
+              </p>
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+                Calculate Impact →
               </Button>
             </CardContent>
           </Card>
