@@ -57,6 +57,14 @@ const App = () => (
               }
             />
             <Route
+              path="/challenges"
+              element={
+                <ProtectedRoute>
+                  <Challenges />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/swipe-page"
               element={
                 <ProtectedRoute>
