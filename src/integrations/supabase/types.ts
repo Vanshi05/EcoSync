@@ -478,6 +478,56 @@ export type Database = {
           },
         ]
       }
+      matches: {
+        Row: {
+          created_at: string | null
+          id: string
+          user_a: string | null
+          user_b: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          user_a?: string | null
+          user_b?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          user_a?: string | null
+          user_b?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matches_user_a_fkey"
+            columns: ["user_a"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_user_a_fkey"
+            columns: ["user_a"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_user_b_fkey"
+            columns: ["user_b"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_user_b_fkey"
+            columns: ["user_b"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           created_at: string | null
@@ -651,6 +701,59 @@ export type Database = {
           {
             foreignKeyName: "saved_searches_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      swipes: {
+        Row: {
+          created_at: string | null
+          direction: string | null
+          id: string
+          swiper_id: string | null
+          target_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          direction?: string | null
+          id?: string
+          swiper_id?: string | null
+          target_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          direction?: string | null
+          id?: string
+          swiper_id?: string | null
+          target_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "swipes_swiper_id_fkey"
+            columns: ["swiper_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swipes_swiper_id_fkey"
+            columns: ["swiper_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swipes_target_id_fkey"
+            columns: ["target_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "swipes_target_id_fkey"
+            columns: ["target_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
