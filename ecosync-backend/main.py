@@ -109,7 +109,7 @@ async def handle_bill(
             f"Based on this electricity bill showing {usage_kwh:.1f} kWh usage, "
             f"provide exactly 5-7 specific, actionable recommendations to reduce energy consumption. "
             f"Each recommendation should include estimated savings in kWh or ₹/month. "
-            f"Format as a numbered list with clear, concrete steps."
+            f"Format as a numbered list with clear, concrete steps. do not give in bold or with asterisk"
         )
         print("🤖 Sending recommendation prompt to Gemini...")
         rec_resp = model.generate_content([
@@ -125,7 +125,7 @@ async def handle_bill(
             f"showing {usage_kwh:.1f} kWh usage (~{budget_data['original_credits']:.1f} kgCO₂). "
             f"They want to reduce consumption by {reduction_percent}% to reach "
             f"{budget_data['target_credits']:.1f} kgCO₂ target. "
-            f"You have provided recommendations. Now answer any follow-up questions."
+            f"You have provided recommendations. Now answer any follow-up questions. do not give in bold or with asterisk"
         )
         print("💬 Initial system message prepared.")
 
