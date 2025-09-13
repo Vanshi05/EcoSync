@@ -90,89 +90,17 @@ const calculateTrip = (distanceKm: number, vehicleType: string, model: string): 
   return { model, fuelUsed, unit: "L", carbon };
 };
 
-// Interactive Map Component
-const InteractiveMap = ({ startCoords, endCoords, startLabel, endLabel, distance }: {
-  startCoords: [number, number];
-  endCoords: [number, number];
-  startLabel: string;
-  endLabel: string;
-  distance: number;
-}) => {
-  const [animationPhase, setAnimationPhase] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAnimationPhase(prev => (prev + 1) % 4);
-    }, 1500);
-    return () => clearInterval(interval);
-  }, []);
-
+// Trip Map Component
+const TripMap = () => {
   return (
-    <Card className="h-96 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 border-border/50 overflow-hidden">
-      <div className="relative h-full">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 bg-gradient-subtle opacity-30" />
-        
-        {/* Start point */}
-        <div className="absolute top-1/4 left-1/5 transform -translate-x-1/2 -translate-y-1/2">
-          <Badge className="bg-eco-primary text-eco-primary-foreground border-white/30 backdrop-blur-sm animate-pulse">
-            <Flag className="h-4 w-4 mr-2" />
-            START
-          </Badge>
-          <p className="text-xs text-muted-foreground mt-1 text-center">{startLabel}</p>
-        </div>
-        
-        {/* End point */}
-        <div className="absolute bottom-1/4 right-1/5 transform translate-x-1/2 translate-y-1/2">
-          <Badge className="bg-destructive text-destructive-foreground border-white/30 backdrop-blur-sm animate-pulse">
-            <MapPin className="h-4 w-4 mr-2" />
-            DESTINATION
-          </Badge>
-          <p className="text-xs text-muted-foreground mt-1 text-center">{endLabel}</p>
-        </div>
-        
-        {/* Route visualization */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none">
-          <defs>
-            <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="hsl(var(--primary))" />
-              <stop offset="50%" stopColor="hsl(var(--accent))" />
-              <stop offset="100%" stopColor="hsl(var(--secondary))" />
-            </linearGradient>
-          </defs>
-          
-          <path 
-            d="M 20% 30% Q 50% 10%, 80% 70%"
-            stroke="url(#routeGradient)"
-            strokeWidth="4"
-            fill="none"
-            strokeDasharray={`${animationPhase * 20} 15`}
-            className="transition-all duration-500"
-          />
-          
-          <circle 
-            r="6" 
-            fill="hsl(var(--eco-primary))"
-            className="animate-pulse"
-          >
-            <animateMotion dur="3s" repeatCount="indefinite">
-              <path d="M 20% 30% Q 50% 10%, 80% 70%" />
-            </animateMotion>
-          </circle>
-        </svg>
-        
-        {/* Center info panel */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <Card className="bg-background/95 backdrop-blur-md border-border/50 shadow-elegant">
-            <CardContent className="p-4 text-center">
-              <Route className="h-6 w-6 mx-auto mb-2 text-primary" />
-              <h4 className="font-semibold text-foreground mb-1">Route Overview</h4>
-              <p className="text-sm text-muted-foreground mb-2">Total Distance</p>
-              <p className="text-2xl font-bold text-primary">{distance} km</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+    <Card className="h-96 bg-gradient-card border-border/50 shadow-medium overflow-hidden">
+      <CardContent className="p-0 h-full">
+        <img 
+          src="/trip.png" 
+          alt="Trip route visualization" 
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </CardContent>
     </Card>
   );
 };
@@ -207,6 +135,7 @@ function TripTracker() {
   const [result, setResult] = useState<TripResult | null>(null);
   const [history, setHistory] = useState<Trip[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [userEcoCoins, setUserEcoCoins] = useState(USER.ecoCoins);
 
   const handleEndTrip = async () => {
     setIsCalculating(true);
@@ -226,6 +155,11 @@ function TripTracker() {
     setSelectedEndpoint(tripData);
 
     const calc = calculateTrip(tripData.distanceKm, vehicleType, model);
+
+    // Award +15 eco points for bus selection
+    if (vehicleType === "bus") {
+      setUserEcoCoins(prev => prev + 15);
+    }
 
     const newTrip: Trip = {
       id: Date.now(),
@@ -270,7 +204,7 @@ function TripTracker() {
                 </div>
                 <Badge className="bg-white/20 text-primary-foreground hover:bg-white/30 border-white/30 backdrop-blur-sm px-4 py-2">
                   <Coins className="h-4 w-4 mr-2" />
-                  <span className="font-bold text-lg">{USER.ecoCoins}</span>
+                  <span className="font-bold text-lg">{userEcoCoins}</span>
                   <span className="ml-1">EcoCoins</span>
                 </Badge>
               </div>
@@ -401,141 +335,138 @@ function TripTracker() {
           </Card>
         </div>
 
-        {/* Results Section */}
+        {/* Results Section - Side by Side Cards */}
         {result && selectedEndpoint && (
-          <Card className="bg-gradient-card border-border/50 shadow-medium">
-            <CardHeader>
-              <CardTitle className="text-3xl text-center">Trip Analysis</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatsCard
-                  icon={Route}
-                  title="Route"
-                  value={`${START_LOCATION.split(',')[0]} → ${selectedEndpoint.label}`}
-                  unit=""
-                />
-                
-                <StatsCard
-                  icon={MapPin}
-                  title="Distance"
-                  value={selectedEndpoint.distanceKm}
-                  unit="km"
-                />
-                
-                <StatsCard
-                  icon={Fuel}
-                  title="Fuel Used"
-                  value={result.fuelUsed}
-                  unit={result.unit}
-                />
-                
-                <StatsCard
-                  icon={TreePine}
-                  title="CO₂ Emitted"
-                  value={result.carbon}
-                  unit="kg"
-                />
-              </div>
-
-              <InteractiveMap
-                startCoords={START_COORDS}
-                endCoords={selectedEndpoint.coords}
-                startLabel={START_LOCATION}
-                endLabel={selectedEndpoint.label}
-                distance={selectedEndpoint.distanceKm}
-              />
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Trip History */}
-        <Card className="bg-gradient-card border-border/50 shadow-medium">
-          <CardHeader>
-            <CardTitle className="text-3xl">Trip History</CardTitle>
-          </CardHeader>
-          <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            {history.length === 0 ? (
-              <div className="text-center py-16 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/30">
-                <Car className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-xl font-semibold text-muted-foreground mb-2">No trips yet!</h3>
-                <p className="text-muted-foreground">Start tracking your carbon footprint today</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {history.map((trip, index) => (
-                  <Card 
-                    key={trip.id} 
-                    className={`${
-                      index === 0 
-                        ? "bg-eco-muted/30 border-eco-primary shadow-medium" 
-                        : "bg-gradient-card border-border/50"
-                    } hover-scale transition-all`}
-                  >
-                    <CardContent className="p-6 relative">
-                      {index === 0 && (
-                        <Badge className="absolute -top-2 right-4 bg-eco-primary text-eco-primary-foreground">
-                          ✨ Latest Trip
-                        </Badge>
-                      )}
-                      
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-lg font-bold text-foreground mb-2">
-                            {trip.start} → {trip.end}
-                          </h3>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              {trip.date}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-4 w-4" />
-                              {trip.time}
-                            </span>
+            {/* Trip Analysis Card */}
+            <Card className="bg-gradient-card border-border/50 shadow-medium">
+              <CardHeader>
+                <CardTitle className="text-2xl text-center">Trip Analysis</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <StatsCard
+                    icon={Route}
+                    title="Route"
+                    value={`${START_LOCATION.split(',')[0]} → ${selectedEndpoint.label}`}
+                    unit=""
+                  />
+                  
+                  <StatsCard
+                    icon={MapPin}
+                    title="Distance"
+                    value={selectedEndpoint.distanceKm}
+                    unit="km"
+                  />
+                  
+                  <StatsCard
+                    icon={Fuel}
+                    title="Fuel Used"
+                    value={result.fuelUsed}
+                    unit={result.unit}
+                  />
+                  
+                  <StatsCard
+                    icon={TreePine}
+                    title="CO₂ Emitted"
+                    value={result.carbon}
+                    unit="kg"
+                  />
+                </div>
+
+                <TripMap />
+              </CardContent>
+            </Card>
+
+            {/* Trip History Card */}
+            <Card className="bg-gradient-card border-border/50 shadow-medium">
+              <CardHeader>
+                <CardTitle className="text-2xl">Trip History</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {history.length === 0 ? (
+                  <div className="text-center py-16 bg-muted/30 rounded-lg border-2 border-dashed border-muted-foreground/30">
+                    <Car className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                    <h3 className="text-xl font-semibold text-muted-foreground mb-2">No trips yet!</h3>
+                    <p className="text-muted-foreground">Start tracking your carbon footprint today</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {history.map((trip, index) => (
+                      <Card 
+                        key={trip.id} 
+                        className={`${
+                          index === 0 
+                            ? "bg-eco-muted/30 border-eco-primary shadow-medium" 
+                            : "bg-gradient-card border-border/50"
+                        } hover-scale transition-all`}
+                      >
+                        <CardContent className="p-4 relative">
+                          {index === 0 && (
+                            <Badge className="absolute -top-2 right-4 bg-eco-primary text-eco-primary-foreground">
+                              ✨ Latest Trip
+                            </Badge>
+                          )}
+                          
+                          <div className="flex justify-between items-start mb-4">
+                            <div>
+                              <h3 className="text-lg font-bold text-foreground mb-2">
+                                {trip.start} → {trip.end}
+                              </h3>
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <Calendar className="h-4 w-4" />
+                                  {trip.date}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Clock className="h-4 w-4" />
+                                  {trip.time}
+                                </span>
+                              </div>
+                            </div>
+                            <Badge variant={index === 0 ? "default" : "secondary"}>
+                              Trip #{history.length - index}
+                            </Badge>
                           </div>
-                        </div>
-                        <Badge variant={index === 0 ? "default" : "secondary"}>
-                          Trip #{history.length - index}
-                        </Badge>
-                      </div>
-                      
-                      <Separator className="my-4" />
-                      
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div className="bg-muted/50 p-3 rounded-lg">
-                          <Route className="h-5 w-5 mb-1 text-primary" />
-                          <p className="text-xs text-muted-foreground">Distance</p>
-                          <p className="font-bold text-foreground">{trip.distanceKm} km</p>
-                        </div>
-                        
-                        <div className="bg-muted/50 p-3 rounded-lg">
-                          <Car className="h-5 w-5 mb-1 text-primary" />
-                          <p className="text-xs text-muted-foreground">Vehicle</p>
-                          <p className="font-bold text-foreground">{trip.vehicle}</p>
-                        </div>
-                        
-                        <div className="bg-muted/50 p-3 rounded-lg">
-                          <Fuel className="h-5 w-5 mb-1 text-primary" />
-                          <p className="text-xs text-muted-foreground">Fuel</p>
-                          <p className="font-bold text-foreground">{trip.fuelUsed}</p>
-                        </div>
-                        
-                        <div className="bg-muted/50 p-3 rounded-lg">
-                          <TreePine className="h-5 w-5 mb-1 text-primary" />
-                          <p className="text-xs text-muted-foreground">Carbon</p>
-                          <p className="font-bold text-foreground">{trip.carbon}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                          
+                          <Separator className="my-4" />
+                          
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="bg-muted/50 p-3 rounded-lg">
+                              <Route className="h-5 w-5 mb-1 text-primary" />
+                              <p className="text-xs text-muted-foreground">Distance</p>
+                              <p className="font-bold text-foreground">{trip.distanceKm} km</p>
+                            </div>
+                            
+                            <div className="bg-muted/50 p-3 rounded-lg">
+                              <Car className="h-5 w-5 mb-1 text-primary" />
+                              <p className="text-xs text-muted-foreground">Vehicle</p>
+                              <p className="font-bold text-foreground">{trip.vehicle}</p>
+                            </div>
+                            
+                            <div className="bg-muted/50 p-3 rounded-lg">
+                              <Fuel className="h-5 w-5 mb-1 text-primary" />
+                              <p className="text-xs text-muted-foreground">Fuel</p>
+                              <p className="font-bold text-foreground">{trip.fuelUsed}</p>
+                            </div>
+                            
+                            <div className="bg-muted/50 p-3 rounded-lg">
+                              <TreePine className="h-5 w-5 mb-1 text-primary" />
+                              <p className="text-xs text-muted-foreground">Carbon</p>
+                              <p className="font-bold text-foreground">{trip.carbon}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
