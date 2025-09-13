@@ -25,6 +25,7 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useNotification } from '@/contexts/NotificationContext';
 
 interface Challenge {
   id: string;
@@ -48,8 +49,11 @@ const Challenges = () => {
   const [userChallenges, setUserChallenges] = useState<Challenge[]>([]);
   const [userLevel, setUserLevel] = useState(5);
   const [userXP, setUserXP] = useState(1250);
-  const [userEcoCoins, setUserEcoCoins] = useState(850);
+  const [userEcoCoins, setUserEcoCoins] = useState(() => {
+    return parseInt(localStorage.getItem('userEcoCoins') || '850');
+  });
   const [streak, setStreak] = useState(7);
+  const { showEcoCoinsNotification, showCouponUnlockedNotification } = useNotification();
 
   useEffect(() => {
     // Load challenges from localStorage
@@ -127,6 +131,51 @@ const Challenges = () => {
       }
       return challenge;
     }));
+  };
+
+  const completeChallenge = (challengeId: string) => {
+    const challenge = userChallenges.find(c => c.id === challengeId);
+    if (!challenge) return;
+
+    // Mark challenge as completed
+    setUserChallenges(prev => prev.map(c => 
+      c.id === challengeId 
+        ? { ...c, status: 'completed' as const, progress: 100 }
+        : c
+    ));
+
+    // Save to localStorage
+    const updatedChallenges = userChallenges.map(c => 
+      c.id === challengeId 
+        ? { ...c, status: 'completed' as const, progress: 100 }
+        : c
+    );
+    localStorage.setItem('userChallenges', JSON.stringify(updatedChallenges));
+
+    // Show eco coins notification first
+    setTimeout(() => {
+      showEcoCoinsNotification(50, 'Challenge completed!');
+      
+      // Update eco coins state
+      const newCoins = userEcoCoins + 50;
+      setUserEcoCoins(newCoins);
+      
+      // Show coupon notification after a delay
+      setTimeout(() => {
+        const brands = ['EcoGreen', 'SustainableLiving', 'GreenChoice', 'EcoFriendly Co.'];
+        const randomBrand = brands[Math.floor(Math.random() * brands.length)];
+        const coupon = {
+          id: Date.now().toString(),
+          brandName: randomBrand,
+          discount: '15%',
+          code: `ECO${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+          validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          isUsed: false
+        };
+        
+        showCouponUnlockedNotification(coupon);
+      }, 2000);
+    }, 100);
   };
 
   const activeChallenges = userChallenges.filter(c => c.status === 'active');
@@ -323,14 +372,29 @@ const Challenges = () => {
                         </Badge>
                       </div>
 
-                      {/* Action Button */}
-                      <Button 
-                        className="w-full bg-gradient-primary hover:shadow-glow"
-                        onClick={() => toggleChallengeStatus(challenge.id)}
-                      >
-                        <Zap className="h-4 w-4 mr-2" />
-                        Continue Challenge
-                      </Button>
+                      {/* Action Buttons */}
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => toggleChallengeStatus(challenge.id)}
+                        >
+                          {challenge.status === 'active' ? (
+                            <Pause className="h-4 w-4 mr-2" />
+                          ) : (
+                            <Play className="h-4 w-4 mr-2" />
+                          )}
+                          {challenge.status === 'active' ? 'Pause' : 'Resume'}
+                        </Button>
+                        <Button 
+                          className="flex-1 bg-gradient-primary hover:shadow-glow"
+                          onClick={() => completeChallenge(challenge.id)}
+                          disabled={challenge.progress < 100}
+                        >
+                          <CheckCircle2 className="h-4 w-4 mr-2" />
+                          Mark Complete
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
