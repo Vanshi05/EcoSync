@@ -54,17 +54,10 @@ interface Business {
 }
 
 const Marketplace = () => {
-  // Brand name mapping for business products
-  const brandNames = {
-    1: 'Patagonia',
-    2: 'Seventh Generation', 
-    3: 'Allbirds',
-    4: 'Dr. Bronner\'s',
-    5: 'Tesla Energy'
-  };
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [brandProfiles, setBrandProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
   const [currentTab, setCurrentTab] = useState("all");
@@ -84,6 +77,7 @@ const Marketplace = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchBrandProfiles();
   }, []);
 
   useEffect(() => {
@@ -101,7 +95,8 @@ const Marketplace = () => {
         .select(`
           *,
           users!listings_seller_id_fkey(username, avatar_url, full_name),
-          home_businesses:business_id(business_name)
+          home_businesses:business_id(business_name),
+          brand_profiles:brand_profile_id(brand_name, verification_status)
         `)
         .eq('status', 'active')
         .eq('is_available', true)
@@ -127,13 +122,13 @@ const Marketplace = () => {
           vendor: listing.home_businesses ? {
             business_name: listing.home_businesses.business_name,
             is_verified: false
-          } : listing.listing_type === 'business_product' && listing.business_id ? {
-            business_name: brandNames[listing.business_id as keyof typeof brandNames] || 'Sustainable Brand',
-            is_verified: true
+          } : listing.listing_type === 'business_product' && listing.brand_profiles ? {
+            business_name: listing.brand_profiles.brand_name,
+            is_verified: listing.brand_profiles.verification_status === 'verified'
           } : undefined,
           seller: {
-            username: listing.listing_type === 'business_product' && listing.business_id 
-              ? brandNames[listing.business_id as keyof typeof brandNames] || 'Sustainable Brand'
+            username: listing.listing_type === 'business_product' && listing.brand_profiles 
+              ? listing.brand_profiles.brand_name
               : listing.users?.username || 'Unknown',
             avatar_url: listing.users?.avatar_url
           }
@@ -202,6 +197,20 @@ const Marketplace = () => {
         description: "Failed to load businesses. Please try again.",
         variant: "destructive"
       });
+    }
+  };
+
+  const fetchBrandProfiles = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('brand_profiles')
+        .select('*')
+        .eq('verification_status', 'verified');
+
+      if (error) throw error;
+      setBrandProfiles(data || []);
+    } catch (error) {
+      console.error('Error fetching brand profiles:', error);
     }
   };
 
@@ -490,10 +499,37 @@ const Marketplace = () => {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  {currentTab === 'brands' && (
-                    <BrandProfileCard brandName="Patagonia" />
-                  )}
+                currentTab === 'brands' ? (
+                  <div className="space-y-6">
+                    {brandProfiles.map((brand) => {
+                      const brandProducts = products.filter(p => 
+                        p.listing_type === 'business_product' && 
+                        p.vendor?.business_name === brand.brand_name
+                      );
+                      
+                      return (
+                        <div key={brand.id} className="space-y-4">
+                          <BrandProfileCard brandName={brand.brand_name} />
+                          {brandProducts.length > 0 && (
+                            <div className={
+                              currentView === "grid" 
+                                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                : "space-y-4"
+                            }>
+                              {brandProducts.map((product) => (
+                                <ProductCard
+                                  key={product.id}
+                                  product={product}
+                                  view={currentView}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
                   <div className={
                     currentView === "grid" 
                       ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -507,9 +543,8 @@ const Marketplace = () => {
                       />
                     ))}
                   </div>
-                </div>
-              )
-            )}
+                )
+              )}
           </MarketplaceTabs>
         </div>
       </section>

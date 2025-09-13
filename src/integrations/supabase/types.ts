@@ -364,6 +364,7 @@ export type Database = {
       }
       listings: {
         Row: {
+          brand_profile_id: number | null
           business_id: number | null
           carbon_saved_kg: number | null
           category_id: number | null
@@ -392,6 +393,7 @@ export type Database = {
           views_count: number | null
         }
         Insert: {
+          brand_profile_id?: number | null
           business_id?: number | null
           carbon_saved_kg?: number | null
           category_id?: number | null
@@ -420,6 +422,7 @@ export type Database = {
           views_count?: number | null
         }
         Update: {
+          brand_profile_id?: number | null
           business_id?: number | null
           carbon_saved_kg?: number | null
           category_id?: number | null
@@ -448,6 +451,13 @@ export type Database = {
           views_count?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "listings_brand_profile_id_fkey"
+            columns: ["brand_profile_id"]
+            isOneToOne: false
+            referencedRelation: "brand_profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "listings_business_id_fkey"
             columns: ["business_id"]
