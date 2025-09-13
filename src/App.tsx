@@ -15,6 +15,7 @@ import SwipePage from "./pages/SwipePage";
 import LandingPage from './pages/LandingPage';
 import EcoConnect from "./pages/EcoConnect";
 import LcaScore from "./pages/LcaScore";
+import Challenges from "./pages/Challenges";
 
 const queryClient = new QueryClient();
 
