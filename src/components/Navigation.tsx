@@ -1,10 +1,17 @@
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { ShoppingCart, User } from "lucide-react";
+import { ShoppingCart, User, Leaf, LogOut, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navigationItems = [
   { name: "Marketplace", path: "/marketplace" },
@@ -16,13 +23,24 @@ const navigationItems = [
 
 export function Navigation() {
   const { getTotalItems } = useCart();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const totalItems = getTotalItems();
 
   return (
     <nav className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
+          {/* Logo on the left */}
+          <NavLink to="/" className="flex items-center gap-2">
+            <div className="bg-gradient-primary rounded-lg p-2">
+              <Leaf className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-foreground">EcoSync</h1>
+            </div>
+          </NavLink>
+
+          {/* Navigation items in the center */}
           <div className="flex justify-center space-x-8 flex-1">
             {navigationItems.map((item) => (
               <NavLink
@@ -42,6 +60,7 @@ export function Navigation() {
             ))}
           </div>
 
+          {/* Cart and Profile on the right */}
           <div className="flex items-center gap-4">
             <NavLink to="/cart" className="relative">
               <Button variant="ghost" size="sm" className="relative">
@@ -56,9 +75,24 @@ export function Navigation() {
               </Button>
             </NavLink>
 
-            <Button variant="ghost" size="sm">
-              <User className="h-5 w-5" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <User className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem>
+                  <UserCircle className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

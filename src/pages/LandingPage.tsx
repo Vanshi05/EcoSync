@@ -34,7 +34,7 @@ const LandingPage = () => {
                 <Leaf className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">EcoNest</h1>
+                <h1 className="text-xl font-bold text-foreground">EcoSync</h1>
                 <p className="text-xs text-muted-foreground">Sustainable Communities</p>
               </div>
             </div>
@@ -189,7 +189,7 @@ const LandingPage = () => {
             <div className="space-y-8">
               <div className="space-y-4">
                 <h3 className="text-3xl md:text-4xl font-bold text-foreground">
-                  Why Choose EcoNest?
+                  Why Choose EcoSync?
                 </h3>
                 <p className="text-muted-foreground text-lg">
                   Join thousands of users who are making a real difference in the fight against climate change.
@@ -260,7 +260,7 @@ const LandingPage = () => {
                   <Leaf className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <h1 className="font-bold text-foreground">EcoNest</h1>
+                  <h1 className="font-bold text-foreground">EcoSync</h1>
                   <p className="text-xs text-muted-foreground">Sustainable Communities</p>
                 </div>
               </div>
@@ -302,7 +302,7 @@ const LandingPage = () => {
 
           <div className="border-t border-border/50 mt-12 pt-8 text-center">
             <p className="text-muted-foreground text-sm">
-              © 2025 EcoNest. All rights reserved. Building sustainable communities worldwide.
+              © 2025 EcoSync. All rights reserved. Building sustainable communities worldwide.
             </p>
           </div>
         </div>
