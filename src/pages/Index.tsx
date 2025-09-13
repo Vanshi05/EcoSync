@@ -36,12 +36,12 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-eco-muted/20 to-background">
       {/* Hero Section */}
       <section 
-        className="relative py-20 px-6 overflow-hidden bg-cover bg-center"
+        className="relative py-32 px-6 overflow-hidden bg-cover bg-center min-h-screen"
         style={{ backgroundImage: 'url(/landscape.png)' }}
       >
         <div className="absolute inset-0 bg-black/40" />
         
-        <div className="relative max-w-7xl mx-auto text-center space-y-8">
+        <div className="relative max-w-7xl mx-auto text-center space-y-8 flex flex-col justify-center min-h-[80vh]">
           <div className="space-y-6">
             <Badge className="bg-eco-primary text-primary-foreground px-6 py-3 text-base font-medium shadow-medium">
               <Leaf className="h-5 w-5 mr-2" />
@@ -49,10 +49,10 @@ const Index = () => {
             </Badge>
             
             <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-tight">
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
+              <span className="bg-gradient-primary bg-clip-text text-transparent" style={{ WebkitTextStroke: '2px hsl(180 30% 64%)' }}>
                 Connect, Conserve
               </span>
-              <span className="bg-gradient-primary bg-clip-text text-transparent block border-t-2 border-eco-primary pt-4 mt-2">
+              <span className="bg-gradient-primary bg-clip-text text-transparent block">
                 Thrive
               </span>
               <span className="text-4xl md:text-5xl text-muted-foreground block mt-4">
