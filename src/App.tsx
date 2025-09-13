@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { Layout } from "./components/Layout";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 import Marketplace from "./pages/Marketplace";
 import CarbonBudget from "./pages/CarbonBudget";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,16 @@ const App = () => {
                 <ProtectedRoute>
                   <Layout>
                     <Index />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Profile />
                   </Layout>
                 </ProtectedRoute>
               }
