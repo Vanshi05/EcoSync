@@ -531,54 +531,6 @@ const Marketplace = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-eco-muted/20 to-background">
-      <nav className="border-b border-border/50 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/" className="flex items-center gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Home
-                </Link>
-              </Button>
-              
-              <Link to="/" className="flex items-center gap-3">
-                <div className="bg-gradient-primary rounded-lg p-2">
-                  <Leaf className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-foreground">EcoNest</h1>
-                  <p className="text-xs text-muted-foreground">Sustainable Marketplace</p>
-                </div>
-              </Link>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-muted-foreground">
-                Welcome back, <span className="text-foreground font-medium">{user?.email}</span>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="rounded-full">
-                    <User className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <User className="h-4 w-4 mr-2" />
-                    Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </div>
-      </nav>
-      
       <section className="relative py-20 px-6">
         <div className="absolute inset-0 overflow-hidden">
           <img
