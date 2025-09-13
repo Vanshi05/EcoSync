@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useNotification } from '@/contexts/NotificationContext';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Challenge {
   id: string;
@@ -133,7 +134,7 @@ const Challenges = () => {
     }));
   };
 
-  const completeChallenge = (challengeId: string) => {
+  const completeChallenge = async (challengeId: string) => {
     const challenge = userChallenges.find(c => c.id === challengeId);
     if (!challenge) return;
 
@@ -160,20 +161,45 @@ const Challenges = () => {
       const newCoins = userEcoCoins + 50;
       setUserEcoCoins(newCoins);
       
-      // Show coupon notification after a delay
-      setTimeout(() => {
-        const brands = ['EcoGreen', 'SustainableLiving', 'GreenChoice', 'EcoFriendly Co.'];
-        const randomBrand = brands[Math.floor(Math.random() * brands.length)];
-        const coupon = {
-          id: Date.now().toString(),
-          brandName: randomBrand,
-          discount: '15%',
-          code: `ECO${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-          validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          isUsed: false
-        };
-        
-        showCouponUnlockedNotification(coupon);
+      // Fetch a random brand and show coupon notification after a delay
+      setTimeout(async () => {
+        try {
+          const { data: brands, error } = await supabase
+            .from('brand_profiles')
+            .select('brand_name')
+            .eq('verification_status', 'verified');
+          
+          let brandName = 'EcoGreen'; // fallback
+          
+          if (!error && brands && brands.length > 0) {
+            const randomBrand = brands[Math.floor(Math.random() * brands.length)];
+            brandName = randomBrand.brand_name;
+          }
+          
+          const coupon = {
+            id: Date.now().toString(),
+            brandName: brandName,
+            discount: '15%',
+            code: `ECO${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+            validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            isUsed: false
+          };
+          
+          showCouponUnlockedNotification(coupon);
+        } catch (error) {
+          console.error('Error fetching brands:', error);
+          // Fallback to default coupon
+          const coupon = {
+            id: Date.now().toString(),
+            brandName: 'EcoGreen',
+            discount: '15%',
+            code: `ECO${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+            validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+            isUsed: false
+          };
+          
+          showCouponUnlockedNotification(coupon);
+        }
       }, 2000);
     }, 100);
   };
