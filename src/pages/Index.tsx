@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import heroImage from "@/assets/marketplace-hero.jpg";
 
 const Index = () => {
   const { user, signOut } = useAuth();
@@ -36,15 +35,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-eco-muted/20 to-background">
       {/* Hero Section */}
-      <section className="relative py-20 px-6 overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={heroImage}
-            alt="Sustainable Community"
-            className="w-full h-full object-cover opacity-10"
-          />
-          <div className="absolute inset-0 bg-gradient-hero opacity-60" />
-        </div>
+      <section 
+        className="relative py-20 px-6 overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: 'url(/landscape.png)' }}
+      >
+        <div className="absolute inset-0 bg-black/40" />
         
         <div className="relative max-w-7xl mx-auto text-center space-y-8">
           <div className="space-y-6">
