@@ -234,7 +234,7 @@ const Challenges = () => {
       <div className="max-w-4xl mx-auto px-6 py-8">
         {/* User Stats Dashboard */}
         <motion.div
-          className="grid md:grid-cols-4 gap-4 mb-8"
+          className="grid md:grid-cols-2 gap-4 mb-8"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -268,32 +268,6 @@ const Challenges = () => {
                 <TrendingUp className="h-4 w-4 mr-1" />
                 <p className="text-xs opacity-75">+125 this week</p>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-r from-orange-400 to-red-500 text-white overflow-hidden">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm opacity-90">Fire Streak</p>
-                  <p className="text-2xl font-bold">{streak}</p>
-                </div>
-                <Flame className="h-8 w-8 opacity-80" />
-              </div>
-              <p className="text-xs opacity-75 mt-2">days in a row</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gradient-to-r from-purple-400 to-pink-500 text-white overflow-hidden">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm opacity-90">Total XP</p>
-                  <p className="text-2xl font-bold">{userXP}</p>
-                </div>
-                <Star className="h-8 w-8 opacity-80" />
-              </div>
-              <p className="text-xs opacity-75 mt-2">Eco Warrior status</p>
             </CardContent>
           </Card>
         </motion.div>
