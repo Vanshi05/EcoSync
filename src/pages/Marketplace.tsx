@@ -54,6 +54,14 @@ interface Business {
 }
 
 const Marketplace = () => {
+  // Brand name mapping for business products
+  const brandNames = {
+    1: 'Patagonia',
+    2: 'Seventh Generation', 
+    3: 'Allbirds',
+    4: 'Dr. Bronner\'s',
+    5: 'Tesla Energy'
+  };
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -112,19 +120,21 @@ const Marketplace = () => {
           sustainability_score: listing.sustainability_score,
           carbon_footprint: listing.carbon_saved_kg,
           condition: listing.condition,
-          is_eco_friendly: listing.listing_type === 'handmade' || listing.listing_type === 'brand_product',
+          is_eco_friendly: listing.listing_type === 'handmade' || listing.listing_type === 'business_product',
           is_second_hand: listing.listing_type === 'thrifted',
           listing_type: listing.listing_type,
           business_id: listing.business_id,
           vendor: listing.home_businesses ? {
             business_name: listing.home_businesses.business_name,
             is_verified: false
-          } : listing.listing_type === 'brand_product' ? {
-            business_name: 'Sustainable Brand',
+          } : listing.listing_type === 'business_product' && listing.business_id ? {
+            business_name: brandNames[listing.business_id as keyof typeof brandNames] || 'Sustainable Brand',
             is_verified: true
           } : undefined,
           seller: {
-            username: listing.users?.username || 'Sustainable Brand',
+            username: listing.listing_type === 'business_product' && listing.business_id 
+              ? brandNames[listing.business_id as keyof typeof brandNames] || 'Sustainable Brand'
+              : listing.users?.username || 'Unknown',
             avatar_url: listing.users?.avatar_url
           }
         };
@@ -212,7 +222,7 @@ const Marketplace = () => {
         }
         break;
       case "brands":
-        filtered = products.filter(p => p.listing_type === 'brand_product');
+        filtered = products.filter(p => p.listing_type === 'business_product');
         break;
       default:
         filtered = products;
