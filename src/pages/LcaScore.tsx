@@ -280,10 +280,10 @@ const EcoScan: React.FC = () => {
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/">
+            {/* <Link to="/">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Home
-            </Link>
+            </Link> */}
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
