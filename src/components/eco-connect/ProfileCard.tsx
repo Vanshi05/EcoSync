@@ -48,7 +48,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
 
   return (
     <motion.div
-      className="relative w-full max-w-sm mx-auto cursor-grab active:cursor-grabbing"
+      className="absolute inset-0 flex items-center justify-center cursor-grab active:cursor-grabbing"
       style={{ x, rotate, opacity }}
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
@@ -59,7 +59,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
       exit={{ scale: 0.9, opacity: 0, y: -20 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      <Card className="bg-gradient-card shadow-strong border border-border/50 overflow-hidden w-full">
+      <Card className="bg-gradient-card shadow-strong border border-border/50 overflow-hidden w-full max-w-sm">
         {/* Profile Image & Header */}
         <div className="relative h-64 sm:h-72 bg-gradient-hero">
           <img

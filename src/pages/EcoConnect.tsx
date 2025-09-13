@@ -246,8 +246,8 @@ const EcoConnect = () => {
         ) : (
           <div className="relative min-h-[calc(100vh-200px)] flex flex-col items-center justify-start pt-4">
             {/* Card Container */}
-            <div className="relative w-full h-auto flex items-start justify-center">
-              <AnimatePresence>
+            <div className="relative w-full h-[600px] flex items-center justify-center">
+              <AnimatePresence mode="wait">
                 {currentUser && (
                   <ProfileCard
                     key={currentUser.id}
@@ -262,7 +262,7 @@ const EcoConnect = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="mt-8 flex gap-6">
+            <div className="mt-4 flex gap-6">
               <Button
                 size="lg"
                 variant="outline"
