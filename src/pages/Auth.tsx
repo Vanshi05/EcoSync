@@ -20,7 +20,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/marketplace');
+      navigate('/');
     }
   }, [user, navigate]);
 
