@@ -48,20 +48,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
 
   return (
     <motion.div
-      className="absolute w-full max-w-sm cursor-grab active:cursor-grabbing"
+      className="relative w-full max-w-sm mx-auto cursor-grab active:cursor-grabbing"
       style={{ x, rotate, opacity }}
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={onDragEnd}
-      whileDrag={{ scale: 1.05 }}
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0.8, opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      whileDrag={{ scale: 1.02 }}
+      initial={{ scale: 0.9, opacity: 0, y: 20 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      exit={{ scale: 0.9, opacity: 0, y: -20 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      <Card className="bg-gradient-card shadow-strong border border-border/50 overflow-hidden">
+      <Card className="bg-gradient-card shadow-strong border border-border/50 overflow-hidden w-full">
         {/* Profile Image & Header */}
-        <div className="relative h-72 bg-gradient-hero">
+        <div className="relative h-64 sm:h-72 bg-gradient-hero">
           <img
             src={user.avatar_url}
             alt={user.full_name}
@@ -91,7 +91,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
         </div>
 
         {/* Profile Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Energy Usage Progress */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">

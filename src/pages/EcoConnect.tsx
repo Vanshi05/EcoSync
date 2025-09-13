@@ -226,7 +226,7 @@ const EcoConnect = () => {
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-6 py-8">
+      <div className="max-w-lg mx-auto px-4 py-4 pb-24">
         {currentIndex >= users.length ? (
           <div className="text-center space-y-6 mt-20">
             <div className="bg-gradient-primary rounded-full p-8 w-24 h-24 mx-auto flex items-center justify-center">
@@ -244,22 +244,25 @@ const EcoConnect = () => {
             </Button>
           </div>
         ) : (
-          <div className="relative h-[600px] flex items-center justify-center">
-            <AnimatePresence>
-              {currentUser && (
-                <ProfileCard
-                  key={currentUser.id}
-                  user={currentUser}
-                  x={x}
-                  rotate={rotate}
-                  opacity={opacity}
-                  onDragEnd={handleDragEnd}
-                />
-              )}
-            </AnimatePresence>
+          <div className="relative min-h-[calc(100vh-200px)] flex flex-col items-center justify-start pt-4">
+            {/* Card Container */}
+            <div className="relative w-full h-auto flex items-start justify-center">
+              <AnimatePresence>
+                {currentUser && (
+                  <ProfileCard
+                    key={currentUser.id}
+                    user={currentUser}
+                    x={x}
+                    rotate={rotate}
+                    opacity={opacity}
+                    onDragEnd={handleDragEnd}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Action Buttons */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-6">
+            <div className="mt-8 flex gap-6">
               <Button
                 size="lg"
                 variant="outline"
