@@ -70,7 +70,7 @@ const Auth = () => {
       });
     } else {
       toast({
-        title: 'Welcome to EcoNest!',
+        title: 'Welcome to EcoSync!',
         description: 'Your account has been created successfully.',
       });
     }
@@ -89,7 +89,7 @@ const Auth = () => {
                 <Leaf className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">EcoNest</h1>
+                <h1 className="text-xl font-bold text-foreground">EcoSync</h1>
                 <p className="text-xs text-muted-foreground">Sustainable Communities</p>
               </div>
             </Link>
@@ -112,7 +112,7 @@ const Auth = () => {
               <Leaf className="h-8 w-8 text-primary-foreground" />
             </div>
             <div>
-              <CardTitle className="text-2xl font-bold text-foreground">Welcome to EcoNest</CardTitle>
+              <CardTitle className="text-2xl font-bold text-foreground">Welcome to EcoSync</CardTitle>
               <CardDescription className="text-muted-foreground">
                 Join your sustainable community today
               </CardDescription>
