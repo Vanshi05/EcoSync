@@ -49,12 +49,12 @@ const Index = () => {
             </Badge>
             
             <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-tight">
-              Track, Trade, and
+              Connect, Conserve
               <span className="bg-gradient-primary bg-clip-text text-transparent block">
-                Transform
+                Thrive
               </span>
               <span className="text-4xl md:text-5xl text-muted-foreground block mt-4">
-                Your Community's Impact
+                Transform Your Community's Impact
               </span>
             </h1>
             
