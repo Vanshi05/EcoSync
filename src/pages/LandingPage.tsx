@@ -1,5 +1,4 @@
-import { Link, Navigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
@@ -16,13 +15,6 @@ import {
 } from 'lucide-react';
 
 const LandingPage = () => {
-  const { user } = useAuth();
-
-  // If user is already signed in, redirect to main app
-  if (user) {
-    return <Navigate to="/" replace />;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-eco-muted/20 to-background">
       {/* Header */}
