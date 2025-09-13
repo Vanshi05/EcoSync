@@ -61,7 +61,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
     >
       <Card className="bg-gradient-card shadow-strong border border-border/50 overflow-hidden w-full max-w-sm">
         {/* Profile Image & Header */}
-        <div className="relative h-64 sm:h-72 bg-gradient-hero">
+        <div className="relative h-48 bg-gradient-hero">
           <img
             src={user.avatar_url}
             alt={user.full_name}
@@ -91,16 +91,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
         </div>
 
         {/* Profile Content */}
-        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="p-4 space-y-4">
           {/* Energy Usage Progress */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-foreground">Sustainability Score</span>
               <span className="text-sm text-eco-primary font-bold">{user.sustainability_score}/100</span>
             </div>
             <Progress 
               value={user.sustainability_score} 
-              className="h-3 bg-muted"
+              className="h-2 bg-muted"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>Eco Beginner</span>
@@ -109,32 +109,32 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center space-y-1 p-3 bg-eco-muted/30 rounded-lg">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="text-center space-y-1 p-2 bg-eco-muted/30 rounded-lg">
               <div className="flex items-center justify-center gap-1">
-                <Package className="h-4 w-4 text-eco-primary" />
-                <span className="text-lg font-bold text-foreground">{user.active_listings}</span>
+                <Package className="h-3 w-3 text-eco-primary" />
+                <span className="text-sm font-bold text-foreground">{user.active_listings}</span>
               </div>
-              <p className="text-xs text-muted-foreground">Active Listings</p>
+              <p className="text-xs text-muted-foreground">Listings</p>
             </div>
-            <div className="text-center space-y-1 p-3 bg-eco-muted/30 rounded-lg">
+            <div className="text-center space-y-1 p-2 bg-eco-muted/30 rounded-lg">
               <div className="flex items-center justify-center gap-1">
-                <ShoppingBag className="h-4 w-4 text-sustainable" />
-                <span className="text-lg font-bold text-foreground">{user.sales_completed}</span>
+                <ShoppingBag className="h-3 w-3 text-sustainable" />
+                <span className="text-sm font-bold text-foreground">{user.sales_completed}</span>
               </div>
-              <p className="text-xs text-muted-foreground">Sales Completed</p>
+              <p className="text-xs text-muted-foreground">Sales</p>
             </div>
-            <div className="text-center space-y-1 p-3 bg-eco-muted/30 rounded-lg">
+            <div className="text-center space-y-1 p-2 bg-eco-muted/30 rounded-lg">
               <div className="flex items-center justify-center gap-1">
-                <Star className="h-4 w-4 text-featured" />
-                <span className="text-lg font-bold text-foreground">{user.average_rating.toFixed(1)}</span>
+                <Star className="h-3 w-3 text-featured" />
+                <span className="text-sm font-bold text-foreground">{user.average_rating.toFixed(1)}</span>
               </div>
-              <p className="text-xs text-muted-foreground">Avg Rating</p>
+              <p className="text-xs text-muted-foreground">Rating</p>
             </div>
-            <div className="text-center space-y-1 p-3 bg-eco-muted/30 rounded-lg">
+            <div className="text-center space-y-1 p-2 bg-eco-muted/30 rounded-lg">
               <div className="flex items-center justify-center gap-1">
-                <Users className="h-4 w-4 text-accent" />
-                <span className="text-lg font-bold text-foreground">{user.followers_count}</span>
+                <Users className="h-3 w-3 text-accent" />
+                <span className="text-sm font-bold text-foreground">{user.followers_count}</span>
               </div>
               <p className="text-xs text-muted-foreground">Followers</p>
             </div>
@@ -142,16 +142,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, x, rotate, opacity, onD
 
           {/* Achievements */}
           {achievements.length > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-2">
               <h3 className="text-sm font-semibold text-foreground">Achievements</h3>
-              <div className="flex flex-wrap gap-2">
-                {achievements.map((achievement, index) => {
+              <div className="flex flex-wrap gap-1">
+                {achievements.slice(0, 3).map((achievement, index) => {
                   const IconComponent = achievement.icon;
                   return (
                     <Badge
                       key={index}
                       variant="secondary"
-                      className="bg-verified/10 text-verified border-verified/20 px-3 py-1"
+                      className="bg-verified/10 text-verified border-verified/20 px-2 py-1 text-xs"
                     >
                       <IconComponent className="h-3 w-3 mr-1" />
                       {achievement.label}
