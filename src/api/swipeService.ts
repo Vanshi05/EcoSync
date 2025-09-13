@@ -1,4 +1,4 @@
-import { supabase } from "../../supabase/supabaseClient.ts";
+import { supabase } from "@/integrations/supabase/client";
 
 // Fetch potential users
 export const getPotentialUsers = async (currentUserId: string) => {
