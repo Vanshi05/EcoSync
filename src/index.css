@@ -8,117 +8,112 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Sustainability-focused color palette */
-    --background: 40 20% 98%;
-    --foreground: 160 15% 15%;
+    /* New color palette based on user requirements */
+    --background: 0 0% 100%;
+    --foreground: 180 30% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 160 15% 15%;
+    --card-foreground: 180 30% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 160 15% 15%;
+    --popover-foreground: 180 30% 20%;
 
-    /* Earth-tone primary colors */
-    --primary: 150 60% 35%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 150 55% 45%;
+    /* Primary colors using #88bcbc */
+    --primary: 180 30% 64%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 180 35% 70%;
 
-    --secondary: 35 25% 92%;
-    --secondary-foreground: 160 15% 15%;
+    /* Secondary colors using #aadabb */
+    --secondary: 140 41% 73%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 40 15% 96%;
-    --muted-foreground: 160 10% 50%;
+    /* Muted colors using #faf7ca */
+    --muted: 54 77% 89%;
+    --muted-foreground: 180 20% 40%;
 
-    --accent: 25 85% 60%;
-    --accent-foreground: 0 0% 98%;
+    /* Accent colors */
+    --accent: 140 41% 73%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 40 15% 88%;
-    --input: 40 15% 92%;
-    --ring: 150 60% 35%;
+    --border: 180 20% 85%;
+    --input: 54 77% 89%;
+    --ring: 180 30% 64%;
 
     --radius: 0.75rem;
 
-    /* Custom sustainability colors */
-    --eco-primary: 150 60% 35%;
-    --eco-secondary: 120 45% 40%;
-    --eco-accent: 25 85% 60%;
-    --eco-muted: 150 20% 85%;
+    /* Custom eco colors */
+    --eco-primary: 180 30% 64%;
+    --eco-secondary: 140 41% 73%;
+    --eco-accent: 54 77% 89%;
+    --eco-muted: 140 20% 90%;
     
     /* Status colors */
-    --verified: 120 60% 45%;
-    --featured: 45 85% 55%;
-    --sustainable: 150 55% 50%;
+    --verified: 140 50% 50%;
+    --featured: 54 70% 65%;
+    --sustainable: 140 41% 73%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(150 60% 35%), hsl(150 55% 45%));
-    --gradient-secondary: linear-gradient(135deg, hsl(120 45% 40%), hsl(150 50% 40%));
-    --gradient-hero: linear-gradient(135deg, hsl(150 60% 35%), hsl(120 50% 40%), hsl(100 45% 35%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(40 20% 98%));
+    /* Gradients using new color palette */
+    --gradient-primary: linear-gradient(135deg, hsl(180 30% 64%), hsl(180 35% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(140 41% 73%), hsl(140 45% 78%));
+    --gradient-hero: linear-gradient(135deg, hsl(180 30% 64%), hsl(140 41% 73%), hsl(54 77% 89%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(54 77% 95%));
     
     /* Shadows */
-    --shadow-soft: 0 2px 8px -2px hsl(150 60% 35% / 0.1);
-    --shadow-medium: 0 4px 16px -4px hsl(150 60% 35% / 0.15);
-    --shadow-strong: 0 8px 24px -8px hsl(150 60% 35% / 0.2);
-    --shadow-glow: 0 0 20px hsl(150 55% 45% / 0.3);
+    --shadow-soft: 0 2px 8px -2px hsl(180 30% 64% / 0.1);
+    --shadow-medium: 0 4px 16px -4px hsl(180 30% 64% / 0.15);
+    --shadow-strong: 0 8px 24px -8px hsl(180 30% 64% / 0.2);
+    --shadow-glow: 0 0 20px hsl(180 30% 64% / 0.3);
 
-    --radius: 0.75rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 180 30% 20%;
+    --sidebar-primary: 180 30% 64%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 54 77% 89%;
+    --sidebar-accent-foreground: 180 30% 20%;
+    --sidebar-border: 180 20% 85%;
+    --sidebar-ring: 180 30% 64%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 180 30% 10%;
+    --foreground: 0 0% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 180 30% 15%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 180 30% 15%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 180 30% 64%;
+    --primary-foreground: 180 30% 10%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 140 41% 30%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 180 20% 20%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 140 41% 40%;
+    --accent-foreground: 0 0% 95%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 180 20% 25%;
+    --input: 180 20% 25%;
+    --ring: 180 30% 64%;
+    
+    --sidebar-background: 180 30% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 180 30% 64%;
+    --sidebar-primary-foreground: 180 30% 10%;
+    --sidebar-accent: 180 20% 20%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 180 20% 25%;
+    --sidebar-ring: 180 30% 64%;
   }
 }
 
@@ -128,6 +123,10 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
   }
 }

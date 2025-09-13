@@ -30,6 +30,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const checkDailyReward = () => {
+    const lastCheckIn = localStorage.getItem('lastDailyCheckIn');
+    const today = new Date().toDateString();
+    
+    if (lastCheckIn !== today) {
+      localStorage.setItem('lastDailyCheckIn', today);
+      
+      // Dispatch custom event for daily check-in
+      setTimeout(() => {
+        const event = new CustomEvent('dailyCheckIn');
+        window.dispatchEvent(event);
+      }, 500);
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -37,6 +52,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Check for daily check-in reward
+        if (event === 'SIGNED_IN' && session?.user) {
+          setTimeout(() => {
+            checkDailyReward();
+          }, 1000);
+        }
       }
     );
 

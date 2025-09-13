@@ -1,9 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Award, Leaf, ExternalLink, ShieldCheck, Globe } from "lucide-react";
+import { Award, Leaf, ExternalLink, ShieldCheck, Globe, Gift, Ticket } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useNotification } from "@/contexts/NotificationContext";
 
 interface BrandProfile {
   id: number;
@@ -23,6 +24,7 @@ interface BrandProfileCardProps {
 export function BrandProfileCard({ brandName }: BrandProfileCardProps) {
   const [brandProfile, setBrandProfile] = useState<BrandProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { getCouponsForBrand, useCoupon } = useNotification();
 
   useEffect(() => {
     fetchBrandProfile();
@@ -69,6 +71,12 @@ export function BrandProfileCard({ brandName }: BrandProfileCardProps) {
       ? JSON.parse(brandProfile.certifications) 
       : [];
 
+  const availableCoupons = getCouponsForBrand(brandName);
+
+  const handleUseCoupon = (couponId: string) => {
+    useCoupon(couponId);
+  };
+
   return (
     <Card className="bg-gradient-card shadow-soft border-border/50 mb-6">
       <CardContent className="p-6">
@@ -105,6 +113,40 @@ export function BrandProfileCard({ brandName }: BrandProfileCardProps) {
 
         {brandProfile.description && (
           <p className="text-muted-foreground mb-4">{brandProfile.description}</p>
+        )}
+
+        {/* Available Coupons */}
+        {availableCoupons.length > 0 && (
+          <div className="space-y-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 mb-4">
+            <div className="flex items-center gap-2">
+              <Gift className="h-4 w-4 text-purple-600" />
+              <h4 className="font-semibold text-sm text-purple-800">Available Coupons</h4>
+            </div>
+            <div className="space-y-2">
+              {availableCoupons.map((coupon) => (
+                <div key={coupon.id} className="flex items-center justify-between p-3 bg-white rounded-md border border-purple-100">
+                  <div className="flex items-center gap-2">
+                    <Ticket className="h-4 w-4 text-purple-600" />
+                    <div>
+                      <p className="font-medium text-sm text-purple-800">{coupon.discount} off</p>
+                      <p className="text-xs text-purple-600">Code: {coupon.code}</p>
+                    </div>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="text-xs border-purple-200 text-purple-700 hover:bg-purple-50"
+                    onClick={() => handleUseCoupon(coupon.id)}
+                  >
+                    Use Now
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-purple-600">
+              Valid until {new Date(availableCoupons[0]?.validUntil).toLocaleDateString()}
+            </p>
+          </div>
         )}
 
         {certifications.length > 0 && (

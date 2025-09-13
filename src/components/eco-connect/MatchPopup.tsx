@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useNotification } from '@/contexts/NotificationContext';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
@@ -43,6 +44,7 @@ interface MatchPopupProps {
 const MatchPopup: React.FC<MatchPopupProps> = ({ user, challenge, onClose }) => {
   const [showChallenge, setShowChallenge] = useState(false);
   const navigate = useNavigate();
+  const { showAchievementNotification } = useNotification();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -245,6 +247,28 @@ const MatchPopup: React.FC<MatchPopupProps> = ({ user, challenge, onClose }) => 
               <Button 
                 className="flex-1 bg-gradient-primary hover:shadow-glow" 
                 onClick={() => {
+                  // Save accepted challenge to localStorage
+                  const savedChallenges = JSON.parse(localStorage.getItem('userChallenges') || '[]');
+                  const newChallenge = {
+                    ...challenge,
+                    partnerId: user.id,
+                    partnerName: user.full_name,
+                    partnerAvatar: user.avatar_url,
+                    acceptedAt: new Date().toISOString(),
+                    status: 'active' as const,
+                    progress: 0,
+                    difficulty: 'medium' as const,
+                    category: 'Social',
+                    xpReward: 100
+                  };
+                  
+                  // Add challenge if not already exists
+                  if (!savedChallenges.find((c: any) => c.id === challenge.id)) {
+                    savedChallenges.push(newChallenge);
+                    localStorage.setItem('userChallenges', JSON.stringify(savedChallenges));
+                  }
+                  
+                  showAchievementNotification('Challenge Accepted!', `You've joined "${challenge.title}" with ${user.full_name}`);
                   onClose();
                   navigate('/challenges');
                 }}
