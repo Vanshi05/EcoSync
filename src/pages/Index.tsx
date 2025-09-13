@@ -202,8 +202,10 @@ const Index = () => {
               <p className="text-muted-foreground">
                 Upload your electricity bill and get actionable tips to reduce energy usage and carbon emissions.
               </p>
-              <Button variant="ghost" className="text-sustainable hover:text-sustainable/80">
-                Get Bill Tips →
+              <Button variant="ghost" className="text-sustainable hover:text-sustainable/80" asChild>
+                <Link to="/carbon-budget">
+                  Get Bill Tips →
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -217,8 +219,10 @@ const Index = () => {
               <p className="text-muted-foreground">
                 Track your trips and see the carbon footprint of your travel, helping you make greener choices.
               </p>
-              <Button variant="ghost" className="text-verified hover:text-verified/80">
-                Track Travel →
+              <Button variant="ghost" className="text-verified hover:text-verified/80" asChild>
+                <Link to="/trip-tracker">
+                  Track Travel →
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -232,8 +236,10 @@ const Index = () => {
               <p className="text-muted-foreground">
                 Upload a product image to receive its environmental impact score and understand its carbon footprint.
               </p>
-              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-                Calculate Impact →
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground" asChild>
+                <Link to="/lca-score">
+                  Calculate Impact →
+                </Link>
               </Button>
             </CardContent>
           </Card>

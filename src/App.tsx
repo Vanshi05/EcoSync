@@ -14,6 +14,7 @@ import TripTracker from "./pages/TripTracker";
 import SwipePage from "./pages/SwipePage";
 import LandingPage from './pages/LandingPage';
 import EcoConnect from "./pages/EcoConnect";
+import LcaScore from "./pages/LcaScore";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <EcoConnect />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/lca-score"
+              element={
+                <ProtectedRoute>
+                  <LcaScore />
                 </ProtectedRoute>
               }
             />
