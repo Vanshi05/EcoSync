@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   product: {
@@ -31,6 +32,22 @@ interface ProductCardProps {
 
 export function ProductCard({ product, view = "grid" }: ProductCardProps) {
   const [isLiked, setIsLiked] = useState(false);
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price_inr: product.price_inr,
+      images: product.images,
+      sustainability_score: product.sustainability_score,
+      carbon_footprint: product.carbon_footprint,
+      condition: product.condition,
+      seller: product.seller,
+      vendor: product.vendor
+    });
+  };
   
   const getSustainabilityColor = (score?: number) => {
     if (!score) return "text-muted-foreground";
@@ -145,7 +162,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
                 <Button variant="ghost" size="sm" className="text-muted-foreground">
                   <Eye className="h-4 w-4" />
                 </Button>
-                <Button variant="default" size="sm" className="ml-auto">
+                <Button variant="default" size="sm" className="ml-auto" onClick={handleAddToCart}>
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Add to Cart
                 </Button>
@@ -262,7 +279,7 @@ export function ProductCard({ product, view = "grid" }: ProductCardProps) {
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full bg-gradient-primary hover:shadow-glow transition-all">
+        <Button className="w-full bg-gradient-primary hover:shadow-glow transition-all" onClick={handleAddToCart}>
           <ShoppingCart className="h-4 w-4 mr-2" />
           Add to Cart
         </Button>
