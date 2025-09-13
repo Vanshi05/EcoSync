@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet"
 import L from "leaflet";
 import { START_LOCATION, ENDPOINTS, VEHICLES, USER } from "../dummyData";
 import { calculateTrip } from "../utils";
+import 'leaflet/dist/leaflet.css';
 
 // Simple green pin icon
 const markerIcon = new L.Icon({

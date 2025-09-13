@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useDailyCheckIn } from "@/hooks/useDailyCheckIn";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Layout } from "./components/Layout";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Marketplace from "./pages/Marketplace";
@@ -16,6 +17,7 @@ import LandingPage from './pages/LandingPage';
 import EcoConnect from "./pages/EcoConnect";
 import LcaScore from "./pages/LcaScore";
 import Challenges from "./pages/Challenges";
+import Cart from "./pages/Cart";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +39,9 @@ const App = () => {
               path="/"
               element={
                 <ProtectedRoute>
-                  <Index />
+                  <Layout>
+                    <Index />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
@@ -45,7 +49,9 @@ const App = () => {
               path="/carbon-budget"
               element={
                 <ProtectedRoute>
-                  <CarbonBudget />
+                  <Layout>
+                    <CarbonBudget />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
@@ -53,7 +59,9 @@ const App = () => {
               path="/trip-tracker"
               element={
                 <ProtectedRoute>
-                  <TripTracker />
+                  <Layout>
+                    <TripTracker />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
@@ -61,7 +69,9 @@ const App = () => {
               path="/challenges"
               element={
                 <ProtectedRoute>
-                  <Challenges />
+                  <Layout>
+                    <Challenges />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
@@ -69,7 +79,9 @@ const App = () => {
               path="/swipe-page"
               element={
                 <ProtectedRoute>
-                  <SwipePage />
+                  <Layout>
+                    <SwipePage />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
@@ -77,7 +89,9 @@ const App = () => {
               path="/marketplace"
               element={
                 <ProtectedRoute>
-                  <Marketplace />
+                  <Layout>
+                    <Marketplace />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
@@ -85,7 +99,9 @@ const App = () => {
               path="/eco-connect"
               element={
                 <ProtectedRoute>
-                  <EcoConnect />
+                  <Layout>
+                    <EcoConnect />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
@@ -93,7 +109,19 @@ const App = () => {
               path="/lca-score"
               element={
                 <ProtectedRoute>
-                  <LcaScore />
+                  <Layout>
+                    <LcaScore />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Cart />
+                  </Layout>
                 </ProtectedRoute>
               }
             />

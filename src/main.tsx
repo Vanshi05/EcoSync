@@ -5,13 +5,16 @@ import "leaflet/dist/leaflet.css";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext';
 import { NotificationProvider } from './contexts/NotificationContext';
+import { CartProvider } from './contexts/CartContext';
 
 createRoot(document.getElementById("root")!).render(
   <AuthProvider>
     <NotificationProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <CartProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </CartProvider>
     </NotificationProvider>
   </AuthProvider>
 );

@@ -90,9 +90,6 @@ export function BrandProfileCard({ brandName }: BrandProfileCardProps) {
                 {brandProfile.brand_name}
                 <ShieldCheck className="h-5 w-5 text-verified" />
               </h2>
-              <Badge className="bg-verified text-white">
-                Verified Sustainable Brand
-              </Badge>
             </div>
           </div>
           

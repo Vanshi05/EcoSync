@@ -35,67 +35,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-eco-muted/20 to-background">
-      {/* Navigation */}
-      <nav className="border-b border-border/50 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-primary rounded-lg p-2">
-                <Leaf className="h-6 w-6 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">EcoNest</h1>
-                <p className="text-xs text-muted-foreground">Sustainable Communities</p>
-              </div>
-            </div>
-            
-            <div className="hidden md:flex items-center gap-6">
-              <Link to="/marketplace" className="text-foreground hover:text-eco-primary transition-colors">
-                Marketplace
-              </Link>
-              <Link to="/eco-connect" className="text-foreground hover:text-eco-primary transition-colors">
-                EcoConnect
-              </Link>
-              <Link to="/dashboard" className="text-foreground hover:text-eco-primary transition-colors">
-                Dashboard
-              </Link>
-              <Link to="/community" className="text-foreground hover:text-eco-primary transition-colors">
-                Community
-              </Link>
-              
-              {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="rounded-full p-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.user_metadata?.avatar_url} />
-                        <AvatarFallback>
-                          <User className="h-4 w-4" />
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <User className="h-4 w-4 mr-2" />
-                      Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleSignOut}>
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button asChild className="bg-gradient-primary hover:shadow-glow transition-all">
-                  <Link to="/auth">Join Now</Link>
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="relative py-20 px-6 overflow-hidden">
         <div className="absolute inset-0">
