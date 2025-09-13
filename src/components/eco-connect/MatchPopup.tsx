@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -41,6 +42,7 @@ interface MatchPopupProps {
 
 const MatchPopup: React.FC<MatchPopupProps> = ({ user, challenge, onClose }) => {
   const [showChallenge, setShowChallenge] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -242,7 +244,10 @@ const MatchPopup: React.FC<MatchPopupProps> = ({ user, challenge, onClose }) => 
               </Button>
               <Button 
                 className="flex-1 bg-gradient-primary hover:shadow-glow" 
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  navigate('/challenges');
+                }}
               >
                 <Award className="h-4 w-4 mr-2" />
                 Accept Challenge
