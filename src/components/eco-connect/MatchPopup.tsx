@@ -151,7 +151,7 @@ const MatchPopup: React.FC<MatchPopupProps> = ({ user, challenge, onClose }) => 
               transition={{ delay: 0.5 }}
             >
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                🎉 Match Found!
+                Match Found!
               </h1>
               <p className="text-lg text-eco-primary font-semibold">
                 Eco Quest Unlocked
@@ -204,7 +204,7 @@ const MatchPopup: React.FC<MatchPopupProps> = ({ user, challenge, onClose }) => 
                 <Target className="h-10 w-10 text-primary-foreground" />
               </motion.div>
               <h2 className="text-2xl font-bold text-foreground mb-2">
-                🎯 New Challenge Unlocked!
+                New Challenge Unlocked!
               </h2>
               <p className="text-muted-foreground">
                 Complete this eco-challenge together
