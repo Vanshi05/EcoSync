@@ -114,7 +114,7 @@ const LandingPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="bg-gradient-card border-border/50 shadow-medium hover:shadow-strong transition-all">
+            <Card className="bg-gradient-card border-2 border-eco-primary/50 shadow-medium hover:shadow-strong transition-all">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-gradient-primary rounded-lg p-3 w-12 h-12 flex items-center justify-center">
                   <TrendingDown className="h-6 w-6 text-primary-foreground" />
@@ -126,7 +126,7 @@ const LandingPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-card border-border/50 shadow-medium hover:shadow-strong transition-all">
+            <Card className="bg-gradient-card border-2 border-eco-primary/50 shadow-medium hover:shadow-strong transition-all">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-gradient-primary rounded-lg p-3 w-12 h-12 flex items-center justify-center">
                   <Car className="h-6 w-6 text-primary-foreground" />
@@ -138,7 +138,7 @@ const LandingPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-card border-border/50 shadow-medium hover:shadow-strong transition-all">
+            <Card className="bg-gradient-card border-2 border-eco-primary/50 shadow-medium hover:shadow-strong transition-all">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-gradient-primary rounded-lg p-3 w-12 h-12 flex items-center justify-center">
                   <ShoppingBag className="h-6 w-6 text-primary-foreground" />
@@ -150,7 +150,7 @@ const LandingPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-card border-border/50 shadow-medium hover:shadow-strong transition-all">
+            <Card className="bg-gradient-card border-2 border-eco-primary/50 shadow-medium hover:shadow-strong transition-all">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-gradient-primary rounded-lg p-3 w-12 h-12 flex items-center justify-center">
                   <Users className="h-6 w-6 text-primary-foreground" />
@@ -162,7 +162,7 @@ const LandingPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-card border-border/50 shadow-medium hover:shadow-strong transition-all">
+            <Card className="bg-gradient-card border-2 border-eco-primary/50 shadow-medium hover:shadow-strong transition-all">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-gradient-primary rounded-lg p-3 w-12 h-12 flex items-center justify-center">
                   <Recycle className="h-6 w-6 text-primary-foreground" />
@@ -174,7 +174,7 @@ const LandingPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-card border-border/50 shadow-medium hover:shadow-strong transition-all">
+            <Card className="bg-gradient-card border-2 border-eco-primary/50 shadow-medium hover:shadow-strong transition-all">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-gradient-primary rounded-lg p-3 w-12 h-12 flex items-center justify-center">
                   <Globe className="h-6 w-6 text-primary-foreground" />

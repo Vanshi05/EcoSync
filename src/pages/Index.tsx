@@ -93,7 +93,7 @@ const Index = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/30 group">
+          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/50 group">
             <CardContent className="p-8 text-center space-y-4">
               <div className="bg-eco-primary/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
                 <ShoppingBag className="h-8 w-8 text-eco-primary" />
@@ -110,7 +110,7 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/30 group">
+          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/50 group">
             <CardContent className="p-8 text-center space-y-4">
               <div className="bg-accent/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Users className="h-8 w-8 text-accent" />
@@ -127,7 +127,7 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/30 group">
+          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/50 group">
             <CardContent className="p-8 text-center space-y-4">
               <div className="bg-sustainable/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
                 <FileText className="h-8 w-8 text-sustainable" />
@@ -144,7 +144,7 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/30 group">
+          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/50 group">
             <CardContent className="p-8 text-center space-y-4">
               <div className="bg-verified/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
                 <MapPin className="h-8 w-8 text-verified" />
@@ -161,7 +161,7 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/30 group lg:col-span-1 md:col-span-2 mx-auto max-w-sm">
+          <Card className="bg-gradient-card shadow-medium hover:shadow-strong transition-all duration-300 border-2 border-eco-primary/50 group lg:col-span-1 md:col-span-2 mx-auto max-w-sm">
             <CardContent className="p-8 text-center space-y-4">
               <div className="bg-muted/10 rounded-full p-4 w-16 h-16 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Camera className="h-8 w-8 text-muted-foreground" />
