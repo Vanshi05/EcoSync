@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Camera, Upload, Leaf, AlertTriangle, CheckCircle, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-
+//
 const LcaScore = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
