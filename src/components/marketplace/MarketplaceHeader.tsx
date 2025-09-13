@@ -89,7 +89,7 @@ export function MarketplaceHeader({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="thrifted">Thrifted Items</SelectItem>
-                  <SelectItem value="homemade">Homemade Products</SelectItem>
+                  <SelectItem value="handmade">Handmade Products</SelectItem>
                   <SelectItem value="sustainable-brands">Sustainable Brands</SelectItem>
                 </SelectContent>
               </Select>

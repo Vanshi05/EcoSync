@@ -16,7 +16,7 @@ interface BusinessCreationFormProps {
 
 export function BusinessCreationForm({ onSuccess, onCancel }: BusinessCreationFormProps) {
   const [formData, setFormData] = useState({
-    brand_name: "",
+    business_name: "",
     description: "",
     website_url: "",
     business_registration: ""
@@ -40,10 +40,10 @@ export function BusinessCreationForm({ onSuccess, onCancel }: BusinessCreationFo
     
     try {
       const { error } = await supabase
-        .from('brand_profiles')
+        .from('home_businesses')
         .insert({
           user_id: user.id,
-          brand_name: formData.brand_name,
+          business_name: formData.business_name,
           description: formData.description,
           website_url: formData.website_url || null,
           business_registration: formData.business_registration || null
@@ -80,11 +80,11 @@ export function BusinessCreationForm({ onSuccess, onCancel }: BusinessCreationFo
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="brand_name">Business Name *</Label>
+            <Label htmlFor="business_name">Business Name *</Label>
             <Input
-              id="brand_name"
-              value={formData.brand_name}
-              onChange={(e) => setFormData({ ...formData, brand_name: e.target.value })}
+              id="business_name"
+              value={formData.business_name}
+              onChange={(e) => setFormData({ ...formData, business_name: e.target.value })}
               placeholder="e.g., Sarah's Handmade Crafts"
               required
             />

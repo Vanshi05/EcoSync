@@ -14,26 +14,25 @@ interface MarketplaceTabsProps {
 
 export function MarketplaceTabs({ children, onTabChange, onProductUpload }: MarketplaceTabsProps) {
   const [showUploadForm, setShowUploadForm] = useState(false);
-  const [uploadType, setUploadType] = useState<"thrifted" | "homemade">("homemade");
+  const [uploadType, setUploadType] = useState<"thrifted" | "handmade">("handmade");
   const [showBusinessForm, setShowBusinessForm] = useState(false);
 
-  const handleUploadClick = (type: "thrifted" | "homemade") => {
+  const handleUploadClick = (type: "thrifted") => {
     setUploadType(type);
-    if (type === "homemade") {
-      setShowBusinessForm(true);
-    } else {
-      setShowUploadForm(true);
-    }
+    setShowUploadForm(true);
+  };
+
+  const handleCreateBusinessClick = () => {
+    setShowBusinessForm(true);
   };
 
   const handleBusinessSuccess = () => {
     setShowBusinessForm(false);
-    setShowUploadForm(true);
+    onProductUpload();
   };
 
   const handleUploadSuccess = () => {
     setShowUploadForm(false);
-    setShowBusinessForm(false);
     onProductUpload();
   };
 
@@ -61,11 +60,11 @@ export function MarketplaceTabs({ children, onTabChange, onProductUpload }: Mark
           </Badge>
         </TabsTrigger>
         <TabsTrigger 
-          value="homemade"
+          value="handmade"
           className="data-[state=active]:bg-gradient-primary data-[state=active]:text-primary-foreground"
         >
           <Hammer className="h-4 w-4 mr-2" />
-          Homemade
+          Handmade
         </TabsTrigger>
         <TabsTrigger 
           value="brands"
@@ -127,23 +126,23 @@ export function MarketplaceTabs({ children, onTabChange, onProductUpload }: Mark
         {children}
       </TabsContent>
 
-      <TabsContent value="homemade" className="space-y-6">
+      <TabsContent value="handmade" className="space-y-6">
         <div className="bg-gradient-card p-6 rounded-lg shadow-soft border border-border/50">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <Hammer className="h-6 w-6 text-eco-primary" />
-              <h2 className="text-xl font-semibold text-foreground">Homemade & Local Products</h2>
+              <h2 className="text-xl font-semibold text-foreground">Handmade & Local Products</h2>
               <Badge className="bg-eco-primary text-primary-foreground">
                 Community Made
               </Badge>
             </div>
-            <Button onClick={() => handleUploadClick("homemade")} className="bg-gradient-primary">
+            <Button onClick={handleCreateBusinessClick} className="bg-gradient-primary">
               <Plus className="h-4 w-4 mr-2" />
-              Create Business & Upload
+              Create Business
             </Button>
           </div>
           <p className="text-muted-foreground mb-4">
-            Support your neighbors by purchasing handcrafted, homemade, and locally produced items. 
+            Support your neighbors by purchasing handcrafted, handmade, and locally produced items. 
             From organic soaps to handwoven textiles, discover unique products made with care.
           </p>
           <div className="flex gap-4 text-sm">
@@ -161,14 +160,6 @@ export function MarketplaceTabs({ children, onTabChange, onProductUpload }: Mark
         {showBusinessForm && (
           <BusinessCreationForm 
             onSuccess={handleBusinessSuccess}
-            onCancel={handleCancel}
-          />
-        )}
-        
-        {showUploadForm && uploadType === "homemade" && (
-          <ProductUploadForm 
-            listingType="homemade" 
-            onSuccess={handleUploadSuccess}
             onCancel={handleCancel}
           />
         )}

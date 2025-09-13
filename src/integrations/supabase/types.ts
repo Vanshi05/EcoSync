@@ -24,7 +24,6 @@ export type Database = {
           description: string | null
           id: number
           sustainability_report_url: string | null
-          user_id: string
           verification_documents: Json | null
           verification_status: string | null
           verified_at: string | null
@@ -39,7 +38,6 @@ export type Database = {
           description?: string | null
           id?: number
           sustainability_report_url?: string | null
-          user_id: string
           verification_documents?: Json | null
           verification_status?: string | null
           verified_at?: string | null
@@ -54,28 +52,12 @@ export type Database = {
           description?: string | null
           id?: number
           sustainability_report_url?: string | null
-          user_id?: string
           verification_documents?: Json | null
           verification_status?: string | null
           verified_at?: string | null
           website_url?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "brand_profiles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "user_profiles_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "brand_profiles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       categories: {
         Row: {
@@ -225,6 +207,54 @@ export type Database = {
           },
         ]
       }
+      home_businesses: {
+        Row: {
+          business_name: string
+          business_registration: string | null
+          created_at: string
+          description: string | null
+          id: number
+          updated_at: string
+          user_id: string | null
+          website_url: string | null
+        }
+        Insert: {
+          business_name: string
+          business_registration?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          updated_at?: string
+          user_id?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          business_name?: string
+          business_registration?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          updated_at?: string
+          user_id?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "home_businesses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "home_businesses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lca_data: {
         Row: {
           Brand_Name: string | null
@@ -334,6 +364,7 @@ export type Database = {
       }
       listings: {
         Row: {
+          business_id: number | null
           carbon_saved_kg: number | null
           category_id: number | null
           condition: string | null
@@ -351,7 +382,7 @@ export type Database = {
           pickup_latitude: number | null
           pickup_longitude: number | null
           price: number
-          seller_id: string
+          seller_id: string | null
           status: string | null
           stock_quantity: number | null
           sustainability_attributes: Json | null
@@ -361,6 +392,7 @@ export type Database = {
           views_count: number | null
         }
         Insert: {
+          business_id?: number | null
           carbon_saved_kg?: number | null
           category_id?: number | null
           condition?: string | null
@@ -378,7 +410,7 @@ export type Database = {
           pickup_latitude?: number | null
           pickup_longitude?: number | null
           price: number
-          seller_id: string
+          seller_id?: string | null
           status?: string | null
           stock_quantity?: number | null
           sustainability_attributes?: Json | null
@@ -388,6 +420,7 @@ export type Database = {
           views_count?: number | null
         }
         Update: {
+          business_id?: number | null
           carbon_saved_kg?: number | null
           category_id?: number | null
           condition?: string | null
@@ -405,7 +438,7 @@ export type Database = {
           pickup_latitude?: number | null
           pickup_longitude?: number | null
           price?: number
-          seller_id?: string
+          seller_id?: string | null
           status?: string | null
           stock_quantity?: number | null
           sustainability_attributes?: Json | null
@@ -415,6 +448,13 @@ export type Database = {
           views_count?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "listings_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "home_businesses"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "listings_category_id_fkey"
             columns: ["category_id"]

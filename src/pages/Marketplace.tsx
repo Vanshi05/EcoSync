@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import { MarketplaceHeader } from "@/components/marketplace/MarketplaceHeader";
 import { MarketplaceTabs } from "@/components/marketplace/MarketplaceTabs";
 import { ProductCard } from "@/components/marketplace/ProductCard";
+import { BusinessCard } from "@/components/marketplace/BusinessCard";
+import { BrandProfileCard } from "@/components/marketplace/BrandProfileCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut } from "lucide-react";
+import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut, ChevronLeft, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/marketplace-hero.jpg";
+import { ProductUploadForm } from "@/components/marketplace/ProductUploadForm";
 
 interface Product {
   id: number;
@@ -23,6 +26,8 @@ interface Product {
   condition?: string;
   is_eco_friendly?: boolean;
   is_second_hand?: boolean;
+  listing_type?: string;
+  business_id?: number;
   vendor?: {
     business_name: string;
     is_verified?: boolean;
@@ -33,12 +38,31 @@ interface Product {
   };
 }
 
+interface Business {
+  id: number;
+  business_name: string;
+  description?: string;
+  user_id: string;
+  owner?: {
+    username: string;
+    avatar_url?: string;
+    full_name?: string;
+    city?: string;
+    sustainability_score?: number;
+  };
+  product_count?: number;
+}
+
 const Marketplace = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState<"grid" | "list">("grid");
   const [currentTab, setCurrentTab] = useState("all");
+  const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
+  const [selectedBusinessUserId, setSelectedBusinessUserId] = useState<string | null>(null);
+  const [showBusinessUpload, setShowBusinessUpload] = useState(false);
   const { toast } = useToast();
   const { user, signOut } = useAuth();
 
@@ -55,8 +79,12 @@ const Marketplace = () => {
   }, []);
 
   useEffect(() => {
-    filterProductsByTab();
-  }, [products, currentTab]);
+    if (currentTab === 'handmade' && !selectedBusinessId) {
+      fetchBusinesses();
+    } else {
+      filterProductsByTab();
+    }
+  }, [products, currentTab, selectedBusinessId]);
 
   const fetchProducts = async () => {
     try {
@@ -64,7 +92,8 @@ const Marketplace = () => {
         .from('listings')
         .select(`
           *,
-          users!listings_seller_id_fkey(username, avatar_url, full_name)
+          users!listings_seller_id_fkey(username, avatar_url, full_name),
+          home_businesses:business_id(business_name)
         `)
         .eq('status', 'active')
         .eq('is_available', true)
@@ -73,20 +102,7 @@ const Marketplace = () => {
 
       if (error) throw error;
 
-      // Get brand profiles separately for users who have them
-      const userIds = data?.map(listing => listing.seller_id) || [];
-      const { data: brandProfiles } = await supabase
-        .from('brand_profiles')
-        .select('user_id, brand_name, verification_status')
-        .in('user_id', userIds);
-
-      const brandProfilesMap = new Map(
-        brandProfiles?.map(bp => [bp.user_id, bp]) || []
-      );
-
       const formattedProducts = data?.map(listing => {
-        const brandProfile = brandProfilesMap.get(listing.seller_id);
-        
         return {
           id: listing.id,
           name: listing.title,
@@ -96,14 +112,19 @@ const Marketplace = () => {
           sustainability_score: listing.sustainability_score,
           carbon_footprint: listing.carbon_saved_kg,
           condition: listing.condition,
-          is_eco_friendly: listing.listing_type === 'handmade',
-          is_second_hand: listing.listing_type === 'thrift',
-          vendor: brandProfile ? {
-            business_name: brandProfile.brand_name,
-            is_verified: brandProfile.verification_status === 'verified'
+          is_eco_friendly: listing.listing_type === 'handmade' || listing.listing_type === 'brand_product',
+          is_second_hand: listing.listing_type === 'thrifted',
+          listing_type: listing.listing_type,
+          business_id: listing.business_id,
+          vendor: listing.home_businesses ? {
+            business_name: listing.home_businesses.business_name,
+            is_verified: false
+          } : listing.listing_type === 'brand_product' ? {
+            business_name: 'Sustainable Brand',
+            is_verified: true
           } : undefined,
           seller: {
-            username: listing.users?.username || 'Unknown User',
+            username: listing.users?.username || 'Sustainable Brand',
             avatar_url: listing.users?.avatar_url
           }
         };
@@ -122,24 +143,104 @@ const Marketplace = () => {
     }
   };
 
+  const fetchBusinesses = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('home_businesses')
+        .select(`
+          *,
+          users!home_businesses_user_id_fkey(username, avatar_url, full_name, city, sustainability_score)
+        `);
+
+      if (error) throw error;
+
+      // Get product count for each business using business_id
+      const businessIds = data?.map(b => b.id) || [];
+      const { data: productCounts } = await supabase
+        .from('listings')
+        .select('business_id')
+        .eq('listing_type', 'handmade')
+        .eq('status', 'active')
+        .eq('is_available', true)
+        .in('business_id', businessIds);
+
+      const countMap = new Map();
+      productCounts?.forEach(p => {
+        countMap.set(p.business_id, (countMap.get(p.business_id) || 0) + 1);
+      });
+
+      const formattedBusinesses = data?.map(business => ({
+        id: business.id,
+        business_name: business.business_name,
+        description: business.description,
+        user_id: business.user_id,
+        owner: business.users ? {
+          username: business.users.username,
+          avatar_url: business.users.avatar_url,
+          full_name: business.users.full_name,
+          city: business.users.city,
+          sustainability_score: business.users.sustainability_score
+        } : undefined,
+        product_count: countMap.get(business.id) || 0
+      })) || [];
+
+      setBusinesses(formattedBusinesses);
+    } catch (error) {
+      console.error('Error fetching businesses:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load businesses. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   const filterProductsByTab = () => {
     let filtered = products;
     
     switch (currentTab) {
       case "thrifted":
-        filtered = products.filter(p => p.is_second_hand);
+        filtered = products.filter(p => p.listing_type === 'thrifted');
         break;
-      case "homemade":
-        filtered = products.filter(p => !p.vendor?.business_name);
+      case "handmade":
+        if (selectedBusinessId) {
+          filtered = products.filter(p => 
+            p.business_id === selectedBusinessId
+          );
+        } else {
+          filtered = products.filter(p => p.listing_type === 'handmade');
+        }
         break;
       case "brands":
-        filtered = products.filter(p => p.vendor?.is_verified);
+        filtered = products.filter(p => p.listing_type === 'brand_product');
         break;
       default:
         filtered = products;
     }
     
     setFilteredProducts(filtered);
+  };
+
+  const handleBusinessClick = (businessId: number, userId: string) => {
+    setSelectedBusinessId(businessId);
+    setSelectedBusinessUserId(userId);
+    
+    // Filter products for this specific business using business_id
+    const businessProducts = products.filter(p => 
+      p.business_id === businessId
+    );
+    setFilteredProducts(businessProducts);
+  };
+
+  const handleBackToBusinesses = () => {
+    setSelectedBusinessId(null);
+    setSelectedBusinessUserId(null);
+    setShowBusinessUpload(false);
+  };
+
+  const handleBusinessUploadSuccess = () => {
+    setShowBusinessUpload(false);
+    fetchProducts();
   };
 
   const handleSearch = (query: string) => {
@@ -269,34 +370,135 @@ const Marketplace = () => {
             currentView={currentView}
           />
 
-          <MarketplaceTabs onTabChange={setCurrentTab} onProductUpload={fetchProducts}>
-            {loading ? (
-              <div className="text-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-primary mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Loading sustainable products...</p>
-              </div>
-            ) : filteredProducts.length === 0 ? (
-              <div className="text-center py-20 space-y-4">
-                <Leaf className="h-16 w-16 text-eco-primary mx-auto opacity-50" />
-                <h3 className="text-xl font-medium text-foreground">No products found</h3>
-                <p className="text-muted-foreground">
-                  Try adjusting your filters or check back later for new listings.
-                </p>
+          <MarketplaceTabs onTabChange={(tab) => {
+            setCurrentTab(tab);
+            if (tab !== 'handmade') {
+              handleBackToBusinesses();
+            }
+          }} onProductUpload={fetchProducts}>
+            {currentTab === 'handmade' && !selectedBusinessId ? (
+              // Show businesses in handmade tab
+              loading ? (
+                <div className="text-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-primary mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading home businesses...</p>
+                </div>
+              ) : businesses.length === 0 ? (
+                <div className="text-center py-20 space-y-4">
+                  <Leaf className="h-16 w-16 text-eco-primary mx-auto opacity-50" />
+                  <h3 className="text-xl font-medium text-foreground">No businesses found</h3>
+                  <p className="text-muted-foreground">
+                    Be the first to create a home business and start selling!
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {businesses.map((business) => (
+                    <BusinessCard
+                      key={business.id}
+                      business={business}
+                      onClick={handleBusinessClick}
+                    />
+                  ))}
+                </div>
+              )
+            ) : currentTab === 'handmade' && selectedBusinessId ? (
+              // Show products for selected business
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleBackToBusinesses}
+                      className="flex items-center gap-2"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Back to Businesses
+                    </Button>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Products from {businesses.find(b => b.id === selectedBusinessId)?.business_name}
+                    </h3>
+                  </div>
+                  <Button 
+                    onClick={() => setShowBusinessUpload(true)}
+                    className="bg-gradient-primary flex items-center gap-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Upload Product
+                  </Button>
+                </div>
+
+                {showBusinessUpload && (
+                  <div className="mb-6">
+                    <ProductUploadForm 
+                      listingType="handmade"
+                      businessId={selectedBusinessId!}
+                      onSuccess={handleBusinessUploadSuccess}
+                      onCancel={() => setShowBusinessUpload(false)}
+                    />
+                  </div>
+                )}
+                
+                {filteredProducts.length === 0 ? (
+                  <div className="text-center py-20 space-y-4">
+                    <Leaf className="h-16 w-16 text-eco-primary mx-auto opacity-50" />
+                    <h3 className="text-xl font-medium text-foreground">No products yet</h3>
+                    <p className="text-muted-foreground">
+                      This business hasn't uploaded any products yet.
+                    </p>
+                  </div>
+                ) : (
+                  <div className={
+                    currentView === "grid" 
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                      : "space-y-4"
+                  }>
+                    {filteredProducts.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        view={currentView}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
-              <div className={
-                currentView === "grid" 
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                  : "space-y-4"
-              }>
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    view={currentView}
-                  />
-                ))}
-              </div>
+              // Show regular filtered products for other tabs
+              loading ? (
+                <div className="text-center py-20">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-eco-primary mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading sustainable products...</p>
+                </div>
+              ) : filteredProducts.length === 0 ? (
+                <div className="text-center py-20 space-y-4">
+                  <Leaf className="h-16 w-16 text-eco-primary mx-auto opacity-50" />
+                  <h3 className="text-xl font-medium text-foreground">No products found</h3>
+                  <p className="text-muted-foreground">
+                    Try adjusting your filters or check back later for new listings.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {currentTab === 'brands' && (
+                    <BrandProfileCard brandName="Patagonia" />
+                  )}
+                  <div className={
+                    currentView === "grid" 
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                      : "space-y-4"
+                  }>
+                    {filteredProducts.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        view={currentView}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )
             )}
           </MarketplaceTabs>
         </div>
