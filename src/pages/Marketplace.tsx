@@ -11,7 +11,7 @@ import { Leaf, Users, Recycle, TrendingUp, ArrowRight, User, LogOut, ChevronLeft
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import heroImage from "@/assets/marketplace-hero.jpg";
 import { ProductUploadForm } from "@/components/marketplace/ProductUploadForm";
 
