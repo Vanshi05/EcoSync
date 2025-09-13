@@ -49,19 +49,16 @@ const Index = () => {
             </Badge>
             
             <h1 className="text-6xl md:text-7xl font-bold text-foreground leading-tight">
-              Connect, Conserve
-              <span className="bg-gradient-primary bg-clip-text text-transparent block">
+              <span className="bg-gradient-primary bg-clip-text text-transparent">
+                Connect, Conserve
+              </span>
+              <span className="bg-gradient-primary bg-clip-text text-transparent block border-t-2 border-eco-primary pt-4 mt-2">
                 Thrive
               </span>
               <span className="text-4xl md:text-5xl text-muted-foreground block mt-4">
                 Transform Your Community's Impact
               </span>
             </h1>
-            
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Join your neighborhood's sustainability journey. Monitor energy usage, 
-              trade eco-friendly products, earn rewards, and build a greener future together.
-            </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
