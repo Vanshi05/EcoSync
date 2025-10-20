@@ -49,7 +49,7 @@ const CarbonBudget = () => {
     formData.append('user_id', 'default_user');
 
     try {
-      const response = await fetch('http://localhost:8000/bill-handler/', {
+      const response = await fetch('https://ecosync-backend-e6qz.onrender.com/bill-handler/', {
         method: 'POST',
         body: formData,
       });
@@ -84,7 +84,7 @@ const CarbonBudget = () => {
         formData.append('user_id', 'default_user');
         formData.append('message', currentMessage);
 
-        const response = await fetch('http://localhost:8000/chat-reply/', {
+        const response = await fetch('https://ecosync-backend-e6qz.onrender.com/chat-reply/', {
           method: 'POST',
           body: formData,
         });
